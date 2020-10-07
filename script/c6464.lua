@@ -24,12 +24,19 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		tc=Duel.CreateToken(p,code)
 		te=tc:GetActivateEffect()
 	end
+	if Duel.GetLocationCount(p,LOCATION_SZONE)<=0 then return end
 	local tg=te:GetTarget()
 	local co=te:GetCost()
 	local op=te:GetOperation()
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
 	Duel.ClearTargetCard()
+	if not tc:IsType(TYPE_FIELD) then
+		local of=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
+		if of then Duel.Destroy(of,REASON_RULE) end
+		of=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+		if of and Duel.Destroy(of,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
+	end
 	Duel.MoveToField(tc,p,p,LOCATION_EXTRA,POS_FACEUP,true)
 	Duel.Hint(HINT_CARD,0,tc:GetCode())
 	Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,0))
@@ -75,4 +82,3 @@ s.command = {
 	83778600,89462956,94192409,511000312,511000913,511001201,511001499,
 	51103026,511003076,810000006,511001122,10000040
 	}
-	
