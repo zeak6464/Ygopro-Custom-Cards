@@ -1,4 +1,4 @@
---Dragoon Duel
+--Command Duel
 local s,id=GetID()
 function s.initial_effect(c)
 	aux.EnableExtraRules(c,s,s.init)
@@ -62,6 +62,6 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(tc,nil,-2,REASON_RULE)
 end
 s.command = {
-	65651,65651,65651
+	53129443,65651
 	}
 	
