@@ -62,6 +62,6 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(tc,nil,-2,REASON_RULE)
 end
 s.command = {
-	65651
+	65651,65651,65651
 	}
 	
