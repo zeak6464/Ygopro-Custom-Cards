@@ -37,7 +37,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		of=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 		if of and Duel.Destroy(of,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
 	end
-	Duel.MoveToField(tc,p,p,LOCATION_SZONE,POS_FACEUP,true)
+	Duel.MoveToField(tc,p,p,LOCATION_REMOVED,POS_FACEUP,true)
 	Duel.Hint(HINT_CARD,0,tc:GetCode())
 	Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,0))
 	Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(id,0))
