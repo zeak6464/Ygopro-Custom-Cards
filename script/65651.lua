@@ -1,3 +1,4 @@
+Debug.ShowHint("Hello, world!")
 Debug.ReloadFieldBegin()
 Debug.SetPlayerInfo(0,8000,0,0)
 Debug.SetPlayerInfo(1,8000,0,0)
