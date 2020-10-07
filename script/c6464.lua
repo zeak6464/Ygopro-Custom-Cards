@@ -24,7 +24,6 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		tc=Duel.CreateToken(p,code)
 		te=tc:GetActivateEffect()
 	end
-	if Duel.GetLocationCount(p,LOCATION_SZONE)<=0 then return end
 	local tg=te:GetTarget()
 	local co=te:GetCost()
 	local op=te:GetOperation()
