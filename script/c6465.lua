@@ -2061,7 +2061,7 @@ if not SealedDuel then
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
 				Debug.ReloadFieldEnd()
-				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(4002,7))
+				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,3))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
 				local exclude=fg:Select(p,0,#fg-20,nil)
 				if exclude then
