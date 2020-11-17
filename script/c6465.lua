@@ -2071,7 +2071,7 @@ if not SealedDuel then
 				Duel.ShuffleExtra(p)
 				local dtpg=Duel.GetDecktopGroup(p,Duel.GetStartingHand(p))
 				Duel.ConfirmCards(p,dtpg)
-				if Duel.SelectYesNo(p,aux.Stringid(id,0)) then
+				if Duel.SelectYesNo(p,aux.Stringid(id,3)) then
 					Duel.MoveToDeckBottom(dtpg)
 				end
 				if counts[p]~=1 then
