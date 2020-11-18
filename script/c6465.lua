@@ -13222,12 +13222,7 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,0))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
-				--Deck Check over 60 Cards 
-				if Duel.GetFieldGroup(p,0xff,0) > 61 then 
-				local exclude=fg:Select(p,0,#fg-1,nil)
-				end
-				
-				local exclude=fg:Select(p,0,#fg-20,nil)
+				local exclude=fg:Select(p,0,#fg-20,nil) if #fg>60
 				if exclude then
 					Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
 				end
