@@ -1820,9 +1820,9 @@ if not SealedDuel then
 						if i==1 then
 							rarity=1
 						elseif i<5 then
-							rarity=2
+							rarity=1
 						else
-							rarity=3
+							rarity=1
 						end
 						local code
 						if rarity==3 and packnum==3 then
