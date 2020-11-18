@@ -13259,8 +13259,11 @@ if not SealedDuel then
 		
 				-- New Code to Edit Deck 
 		if Duel.SelectYesNo(p,aux.Stringid(6465,8)) then
-			local rg1=dg1:Select(tp,#dg1-60,#dg1-40,nil)
-			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
+			local fg=Duel.GetFieldGroup(p,0xff,0)
+			local exclude=fg:Select(p,0,#fg-20,nil)
+				if exclude then
+					Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
+				end
 		end
 		
 		
