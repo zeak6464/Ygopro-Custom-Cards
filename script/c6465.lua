@@ -13228,9 +13228,9 @@ if not SealedDuel then
 				   Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
 				end
 				
-				if exclude then
-					Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
-				end
+				--if exclude then
+				--	Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
+				--end
 				Duel.ShuffleDeck(p)
 				Duel.ShuffleExtra(p)
 				local dtpg=Duel.GetDecktopGroup(p,Duel.GetStartingHand(p))
