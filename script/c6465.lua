@@ -13192,7 +13192,7 @@ if not SealedDuel then
 
             Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,7))
 			numcards = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10)
-		else #dg1==40 then		
+		else #dg1=40 then		
 			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,6))
 			numpacks = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
 
