@@ -13213,8 +13213,8 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			--Deck is ?? 1
-				Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,0),nil,39,REASON_RULE)
+
+				--Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,0),nil,1,REASON_RULE)
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
@@ -13222,6 +13222,10 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,0))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
+				--Deck Check over 60 Cards 
+				if Duel.GetFieldGroup(p,0xff,0) > 61 then 
+				local exclude=fg:Select(p,0,#fg-1,nil)
+				end
 				
 				local exclude=fg:Select(p,0,#fg-20,nil)
 				if exclude then
