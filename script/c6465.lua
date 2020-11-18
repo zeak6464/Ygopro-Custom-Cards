@@ -13209,7 +13209,7 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			 if return Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)>=60 then
+			 if return Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)==60 then
 				Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,0),nil,-2,REASON_RULE)
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
