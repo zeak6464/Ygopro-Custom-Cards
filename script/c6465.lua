@@ -13219,11 +13219,13 @@ if not SealedDuel then
 				Debug.ReloadFieldEnd()
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
-				local fg=Duel.GetFieldGroup(p,0xff,0)
-				
-				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)<61 then
-				local exclude=fg:Select(p,0,#fg-20,nil) 
-				end
+		local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
+		if #dg1>30 then
+			local rg1=dg1:Select(tp,#dg1-30,#dg1-20,nil)
+			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
+		end
+				--local fg=Duel.GetFieldGroup(p,0xff,0)
+				--local exclude=fg:Select(p,0,#fg-20,nil) 
 
 
 				Duel.ShuffleDeck(p)
