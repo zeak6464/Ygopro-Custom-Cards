@@ -13220,7 +13220,7 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
 		local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
-		if #dg1>30 then
+		if #dg1>60 then
 			local rg1=dg1:Select(tp,#dg1-30,#dg1-20,nil)
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
