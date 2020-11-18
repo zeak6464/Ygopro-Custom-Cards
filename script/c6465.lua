@@ -13180,6 +13180,7 @@ if not SealedDuel then
 					local packnum=0
 					--random set among selected sets
 					repeat
+					--Number of Packs in Game
 						packnum=Duel.GetRandomNumber(1,110)
 					until selectpack[packnum]
 					for i=1,5 do
@@ -13195,7 +13196,7 @@ if not SealedDuel then
 						if rarity==3 and packnum==3 then
 							local tempn=3
 							repeat
-								tempn=Duel.GetRandomNumber(1,10)
+								tempn=Duel.GetRandomNumber(1,3)
 							until tempn~=3 and selectpack[tempn]
 							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 						else
@@ -13215,6 +13216,7 @@ if not SealedDuel then
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
 				Debug.ReloadFieldEnd()
+				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,0))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
 				local exclude=fg:Select(p,0,#fg-20,nil)
