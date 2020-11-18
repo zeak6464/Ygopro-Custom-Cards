@@ -13220,14 +13220,11 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
 		local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
+		-- New Code for Deck Checking 40-60 Cards
 		if #dg1>60 then
-			local rg1=dg1:Select(tp,#dg1-60,#dg1-40,nil)
+			local rg1=dg1:Select(tp,#dg1-40,#dg1-60,nil)
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
-				--local fg=Duel.GetFieldGroup(p,0xff,0)
-				--local exclude=fg:Select(p,0,#fg-20,nil) 
-
-
 				Duel.ShuffleDeck(p)
 				local dtpg=Duel.GetDecktopGroup(p,Duel.GetStartingHand(p))
 				Duel.ConfirmCards(p,dtpg)
