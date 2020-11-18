@@ -13209,13 +13209,11 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			 if return Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)==60 then
 				Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,0),nil,-2,REASON_RULE)
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
 				Debug.ReloadFieldEnd()
-			end
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,3))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
 				local exclude=fg:Select(p,0,#fg-20,nil)
@@ -13231,6 +13229,9 @@ if not SealedDuel then
 				end
 				if counts[p]~=1 then
 					Duel.TagSwap(p)
+				end
+				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)<60
+				    Duel.SelectYesNo(p,aux.Stringid(id,3))
 				end
 			end
 		end
