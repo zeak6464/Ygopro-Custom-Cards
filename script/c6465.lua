@@ -13220,7 +13220,8 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
-				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)=<61
+				
+				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)=<61 then
 				local exclude=fg:Select(p,0,#fg-20,nil) 
 				end
 
