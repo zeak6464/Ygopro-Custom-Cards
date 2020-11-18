@@ -1381,7 +1381,7 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-				for i=1,10 do
+				for i=1,9 do
 					local packnum=0
 					--random set among selected sets
 					repeat
@@ -1400,7 +1400,7 @@ if not SealedDuel then
 						if rarity==3 and packnum==3 then
 							local tempn=3
 							repeat
-								tempn=Duel.GetRandomNumber(1,10)
+								tempn=Duel.GetRandomNumber(1,9)
 							until tempn~=3 and selectpack[tempn]
 							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 						else
