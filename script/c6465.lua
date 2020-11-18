@@ -1343,7 +1343,74 @@ if not SealedDuel then
 		}
 		pack[11][2]={}
 		pack[11][3]={}
-         for _,v in ipairs(pack[11][1]) do table.insert(pack[11][3],v) end		 
+         for _,v in ipairs(pack[11][1]) do table.insert(pack[11][3],v) end	
+
+--Pack12
+		pack[12]={}
+		pack[12][1]={27744077,
+89801755,
+980973,
+46384672,
+73879377,
+51562916,
+36262024,
+51394546,
+13179332,
+90928333,
+74713516,
+1102515,
+97342942,
+30314994,
+66712593,
+26022485,
+91862578,
+27967615,
+12057781,
+52648457,
+89405199,
+28357177,
+88789641,
+26412047,
+52417194,
+75830094,
+11224103,
+48229808,
+9264485,
+93107608,
+52684508,
+25290459,
+72657739,
+39191307,
+27134689,
+15800838,
+66690411,
+52817046,
+4929256,
+80863132,
+47507260,
+74591968,
+49563947,
+4041838,
+89628781,
+65878864,
+90140980,
+64751286,
+31440542,
+54351224,
+53539634,
+86652646,
+53239672,
+90740329,
+88089103,
+38479725,
+25578802,
+67934141,
+49441499,
+92084010
+		}
+		pack[12][2]={}
+		pack[12][3]={}
+         for _,v in ipairs(pack[12][1]) do table.insert(pack[12][3],v) end		 
 		
 	local namechange={
 		--0 - alternate art, 1 - anime/vg/illegal counterpart
@@ -1445,12 +1512,12 @@ if not SealedDuel then
 		
 		--pack selection
 		local selectpack={}
-		for _,sel in ipairs({Duel.SelectCardsFromCodes(tp,1,11,false,true,5,4,3,2,1,6,7,8,9,10,11)}) do
+		for _,sel in ipairs({Duel.SelectCardsFromCodes(tp,1,12,false,true,5,4,3,2,1,6,7,8,9,10,11,12)}) do
 			selectpack[sel[2]]=true
 		end
 		
 		--pack checking
-		if selectpack[3] and not selectpack[1] and not selectpack[2] and not selectpack[5] and not selectpack[6] and not selectpack[7] and not selectpack[8] and not selectpack[9]  and not selectpack[10] and not selectpack[11] and not selectpack[4] then
+		if selectpack[3] and not selectpack[1] and not selectpack[2] and not selectpack[5] and not selectpack[6] and not selectpack[7] and not selectpack[8] and not selectpack[9]  and not selectpack[10] and not selectpack[11] and not selectpack[12] and not selectpack[4] then
 			selectpack[2]=true
 		end
 		
@@ -1498,11 +1565,11 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-				for i=1,11 do
+				for i=1,12 do
 					local packnum=0
 					--random set among selected sets
 					repeat
-						packnum=Duel.GetRandomNumber(1,11)
+						packnum=Duel.GetRandomNumber(1,12)
 					until selectpack[packnum]
 					for i=1,5 do
 						local rarity
@@ -1517,7 +1584,7 @@ if not SealedDuel then
 						if rarity==3 and packnum==3 then
 							local tempn=3
 							repeat
-								tempn=Duel.GetRandomNumber(1,11)
+								tempn=Duel.GetRandomNumber(1,12)
 							until tempn~=3 and selectpack[tempn]
 							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 						else
