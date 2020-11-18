@@ -22,7 +22,8 @@ if not SealedDuel then
 	--pack[1]=Labyrinth of Nightmare, [2]=Pharaoh's Servant, [3]=Magic Ruler, [4]=Metal Raiders , [5]=Legend of Blue-Eyes
 	--[1]=rare, [2]=common, [3]=foil
 	pack={}
-		pack[1]={
+		pack[1]={}
+		pack[1][1]={
 91869203,
 67371383,
 40916023,
@@ -129,7 +130,8 @@ if not SealedDuel then
 73216412,
 88472456		
 		}
-        for _,v in ipairs(pack[1]) do table.insert(pack[5],v) end
+		pack[1][2]={}
+		pack[1][3]={}
 		pack[2]={}
 		pack[2][1]={
 83994646,
