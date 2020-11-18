@@ -132,6 +132,7 @@ if not SealedDuel then
 		}
 		pack[1][2]={}
 		pack[1][3]={}
+		for _,v in ipairs(pack[1][1]) do table.insert(pack[1][3],v) end
 		pack[2]={}
 		pack[2][1]={
 83994646,
