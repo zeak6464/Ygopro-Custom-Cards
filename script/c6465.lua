@@ -130,8 +130,8 @@ if not SealedDuel then
 73216412,
 88472456		
 		}
-		pack[1][2]={}
-		pack[1][3]={}
+		pack[1][2]={1}
+		pack[1][3]={1}
 		for _,v in ipairs(pack[1][1]) do table.insert(pack[1][3],v) end
 		pack[2]={}
 		pack[2][1]={
