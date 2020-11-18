@@ -13276,6 +13276,7 @@ if not SealedDuel then
 				end
 			end
 		end
+	end
 
 		-- New Code for Extra Deck Checking 
 		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
