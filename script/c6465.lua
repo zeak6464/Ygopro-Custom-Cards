@@ -13248,18 +13248,18 @@ if not SealedDuel then
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
 		
-		-- New Code to Edit Deck 
-		if Duel.SelectYesNo(p,aux.Stringid(6465,3)) then
-			local rg1=dg1:Select(tp,#dg1-60,#dg1-40,nil)
-			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
-		end
-		
 
 		-- New Code for Extra Deck Checking 
-		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,8))
+		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
 		local eg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
         if #eg1>15 then
 			local rg1=eg1:Select(tp,#eg1-15,#eg1-0,nil)
+			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
+		end
+		
+				-- New Code to Edit Deck 
+		if Duel.SelectYesNo(p,aux.Stringid(6465,8)) then
+			local rg1=dg1:Select(tp,#dg1-60,#dg1-40,nil)
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
 		
