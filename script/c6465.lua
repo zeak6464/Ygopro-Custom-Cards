@@ -532,7 +532,8 @@ if not SealedDuel then
 		pack[4][2]={}
 		pack[4][3]={}
 		for _,v in ipairs(pack[4][1]) do table.insert(pack[4][3],v) end
-		pack[5]={}
+	
+     	pack[5]={}
 		pack[5][1]={
 111006013,
 111006001,
@@ -657,7 +658,7 @@ if not SealedDuel then
 		 
 		pack[6]={}
 		pack[6][1]={
-		68170903,
+68170903,
 295517,
 28596933,
 25345186,
@@ -765,7 +766,7 @@ if not SealedDuel then
 
 		pack[7]={}
 		pack[7][1]={
-		14261867,
+14261867,
 24140059,
 51351302,
 23927567,
@@ -880,7 +881,7 @@ if not SealedDuel then
 
 		pack[8]={}
 		pack[8][1]={
-		62325062,
+62325062,
 48202661,
 67987611,
 73574678,
@@ -988,7 +989,6 @@ if not SealedDuel then
 25119460,
 64500000,
 47693640
-	
 		}
 		pack[8][2]={}
 		pack[8][3]={}
@@ -996,7 +996,7 @@ if not SealedDuel then
 
 		pack[9]={}
 		pack[9][1]={
-		6850209,
+6850209,
 47372349,
 16135253,
 21070956,
@@ -1102,7 +1102,6 @@ if not SealedDuel then
 73219648,
 68427465,
 16268841
-	
 		}
 		pack[9][2]={}
 		pack[9][3]={}
@@ -1222,7 +1221,6 @@ if not SealedDuel then
 75946257,
 4542651,
 83133491		
-	
 		}
 		pack[10][2]={}
 		pack[10][3]={}
@@ -1381,11 +1379,11 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-				for i=1,9 do
+				for i=1,10 do
 					local packnum=0
 					--random set among selected sets
 					repeat
-						packnum=Duel.GetRandomNumber(1,9)
+						packnum=Duel.GetRandomNumber(1,10)
 					until selectpack[packnum]
 					for i=1,5 do
 						local rarity
@@ -1400,7 +1398,7 @@ if not SealedDuel then
 						if rarity==3 and packnum==3 then
 							local tempn=3
 							repeat
-								tempn=Duel.GetRandomNumber(1,9)
+								tempn=Duel.GetRandomNumber(1,10)
 							until tempn~=3 and selectpack[tempn]
 							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 						else
