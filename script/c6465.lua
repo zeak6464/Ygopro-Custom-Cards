@@ -13220,8 +13220,11 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
-				--local exclude=fg:Select(p,0,#fg-20,nil) 
-				--end??
+				
+			  if Duel.GetFieldGroup(p,0xff,0)<60 then
+				local exclude=fg:Select(p,0,#fg-20,nil) 
+               end
+
 				Duel.ShuffleDeck(p)
 				local dtpg=Duel.GetDecktopGroup(p,Duel.GetStartingHand(p))
 				Duel.ConfirmCards(p,dtpg)
