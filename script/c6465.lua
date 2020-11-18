@@ -13224,7 +13224,7 @@ if not SealedDuel then
 				local fg=Duel.GetFieldGroup(p,0xff,0)
 				local exclude=fg:Select(p,0,#fg-20,nil) 
 				
-				if #fg>60 then
+				if #fg<60 then
 				   Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
 				end
 				
