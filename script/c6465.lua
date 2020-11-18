@@ -13179,7 +13179,7 @@ if not SealedDuel then
 					local packnum=0
 					--random set among selected sets
 					repeat
-						packnum=Duel.GetRandomNumber(1,110)
+						packnum=Duel.GetRandomNumber(1,2)
 					until selectpack[packnum]
 					for i=1,5 do
 						local rarity
@@ -13229,9 +13229,6 @@ if not SealedDuel then
 				end
 				if counts[p]~=1 then
 					Duel.TagSwap(p)
-				end
-				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)<60 then
-				    Duel.SelectYesNo(p,aux.Stringid(id,3))
 				end
 			end
 		end
