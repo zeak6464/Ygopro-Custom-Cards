@@ -13177,7 +13177,9 @@ if not SealedDuel then
 		for p=z,o do
 			for team=1,counts[p] do
 			
-		-- New Code for Deck Checking for Pack Opening
+			-- Numeber of Packs to be opened 8
+				for i=1,numpacks do
+						-- New Code for Deck Checking for Pack Opening
 		local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
 		if #dg1<40 then
 			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,6))
@@ -13193,9 +13195,6 @@ if not SealedDuel then
 			local numcards = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10)
 		else		
 		end
-			
-			-- Numeber of Packs to be opened 8
-				for i=1,numpacks do
 					local packnum=0
 					--random set among selected sets
 					repeat
