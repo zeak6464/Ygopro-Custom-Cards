@@ -13230,7 +13230,7 @@ if not SealedDuel then
 				if counts[p]~=1 then
 					Duel.TagSwap(p)
 				end
-				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)<60
+				if Duel.GetFieldGroupCount(tp,1,LOCATION_DECK)<60 then
 				    Duel.SelectYesNo(p,aux.Stringid(id,3))
 				end
 			end
