@@ -13258,13 +13258,11 @@ if not SealedDuel then
 		end
 		
 				-- New Code to Edit Deck 
-		if Duel.SelectYesNo(p,aux.Stringid(6465,8)) then
+		if Duel.SelectYesNo(p,aux.Stringid(6465,8)) and #dg1<39 then
 		    local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
 			local fg=Duel.GetFieldGroup(p,0xff,0)
 			local exclude=fg:Select(p,0,#fg-20,nil)
-				if #dg1<39 then
-					Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
-				end
+				  Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
 		end
 		
 		
