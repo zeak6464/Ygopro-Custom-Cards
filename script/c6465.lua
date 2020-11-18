@@ -13176,8 +13176,10 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
+			Duel.AnnounceNumber
+			pan = Duel.AnnounceNumber
 			-- Numeber of Packs to be opened 8
-				for i=1,8 do
+				for i=1,pan do
 					local packnum=0
 					--random set among selected sets
 					repeat
@@ -13226,7 +13228,7 @@ if not SealedDuel then
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
 		-- New Code for Extra Deck Checking 
-		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,0))
+		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
 		local eg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
         if #eg1>15 then
 			local rg1=eg1:Select(tp,#eg1-15,#eg1-0,nil)
