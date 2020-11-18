@@ -13176,8 +13176,12 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			Duel.Hint(HINT_SELECTMSG,tp,565)
-			local numpacks = Duel.AnnounceNumber(tp,1,24)
+			
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,6))
+			local numpacks = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
+
+            Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,7))
+			local numcards = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10)
 
 			-- Numeber of Packs to be opened 8
 				for i=1,numpacks do
@@ -13188,7 +13192,7 @@ if not SealedDuel then
 						packnum=Duel.GetRandomNumber(1,110)
 					until selectpack[packnum]
 					--Numbers of cards in pack 5
-					for i=1,5 do
+					for i=1,numcards do
 						local rarity
 						if i==1 then
 							rarity=1
