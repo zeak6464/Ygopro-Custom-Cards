@@ -13179,7 +13179,7 @@ if not SealedDuel then
 					local packnum=0
 					--random set among selected sets
 					repeat
-						packnum=Duel.GetRandomNumber(1,2)
+						packnum=Duel.GetRandomNumber(1,5)
 					until selectpack[packnum]
 					for i=1,5 do
 						local rarity
