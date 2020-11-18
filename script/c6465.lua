@@ -13176,10 +13176,11 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			Duel.AnnounceNumber
-			pan = Duel.AnnounceNumber
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
+			local numpacks = Duel.AnnounceNumber(tp)
+
 			-- Numeber of Packs to be opened 8
-				for i=1,pan do
+				for i=1,numpacks do
 					local packnum=0
 					--random set among selected sets
 					repeat
