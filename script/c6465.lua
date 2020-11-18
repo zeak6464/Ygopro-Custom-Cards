@@ -13274,9 +13274,7 @@ if not SealedDuel then
 						table.insert(groups[p][team],finalcode)
 					end
 				end
-			end
-		end
-	end
+	
 
 		-- New Code for Extra Deck Checking 
 		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
