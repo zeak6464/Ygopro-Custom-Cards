@@ -13191,8 +13191,7 @@ if not SealedDuel then
 
             Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,7))
 			local numcards = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10)
-		else
-           error("invalid operation")		
+		else		
 		end
 			
 			-- Numeber of Packs to be opened 8
