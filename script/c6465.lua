@@ -13176,16 +13176,16 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-			-- Numeber of Packs to be opened 
+			-- Numeber of Packs to be opened 8
 				for i=1,8 do
 					local packnum=0
 					--random set among selected sets
 					repeat
-					--Number of Packs in Game
+					--Number of Packs in Game 110
 						packnum=Duel.GetRandomNumber(1,110)
 					until selectpack[packnum]
-					--Numbers of cards in pack ?
-					for i=1,2 do
+					--Numbers of cards in pack 5
+					for i=1,5 do
 						local rarity
 						if i==1 then
 							rarity=1
@@ -13213,7 +13213,8 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-				Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,0),nil,-2,REASON_RULE)
+			--Deck is 0 40 ??
+				Duel.SendtoDeck(Duel.GetFieldGroup(p,0xff,40),nil,-2,REASON_RULE)
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
@@ -13221,6 +13222,7 @@ if not SealedDuel then
 				--Deck Check
 				Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,0))
 				local fg=Duel.GetFieldGroup(p,0xff,0)
+				
 				local exclude=fg:Select(p,0,#fg-20,nil)
 				if exclude then
 					Duel.SendtoDeck(exclude,nil,-2,REASON_RULE)
