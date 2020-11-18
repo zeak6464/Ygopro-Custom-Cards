@@ -13234,50 +13234,9 @@ if not SealedDuel then
 		end
 		
 		if #dg1<40 then
-            for p=z,o do
-			for team=1,counts[p] do
-			
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,6))
-			local numpacks = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
-
-            Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(6465,7))
-			local numcards = Duel.AnnounceNumber(tp,1,2,3,4,5,6,7,8,9,10)
-
-			-- Numeber of Packs to be opened 8
-				for i=1,numpacks do
-					local packnum=0
-					--random set among selected sets
-					repeat
-					--Number of Packs in Game 110
-						packnum=Duel.GetRandomNumber(1,110)
-					until selectpack[packnum]
-					--Numbers of cards in pack 5
-					for i=1,numcards do
-						local rarity
-						if i==1 then
-							rarity=1
-						elseif i<5 then
-							rarity=1
-						else
-							rarity=1
-						end
-						local code
-						if rarity==3 and packnum==3 then
-							local tempn=3
-							repeat
-								tempn=Duel.GetRandomNumber(1,3)
-							until tempn~=3 and selectpack[tempn]
-							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
-						else
-							code=pack[packnum][rarity][Duel.GetRandomNumber(1,#pack[packnum][rarity])]
-						end
-						local finalcode=SealedDuel.alternate(code,anime)
-						table.insert(groups[p][team],finalcode)
-					end
-				end
-			end
+			local rg1=dg1:Select(tp,#dg1-60,#dg1-40,nil)
+			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
-	end
 		
 		
 		
