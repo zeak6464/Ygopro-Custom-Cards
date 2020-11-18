@@ -13184,7 +13184,8 @@ if not SealedDuel then
 					--Number of Packs in Game
 						packnum=Duel.GetRandomNumber(1,110)
 					until selectpack[packnum]
-					for i=1,5 do
+					--Numbers of cards in pack ?
+					for i=1,2 do
 						local rarity
 						if i==1 then
 							rarity=1
