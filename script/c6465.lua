@@ -13175,13 +13175,13 @@ if not SealedDuel then
 		
 		for p=z,o do
 			for team=1,counts[p] do
-				for i=1,10 do
+				for i=1,110 do
 					local packnum=0
 					--random set among selected sets
 					repeat
-						packnum=Duel.GetRandomNumber(1,10)
+						packnum=Duel.GetRandomNumber(1,110)
 					until selectpack[packnum]
-					for i=1,10 do
+					for i=1,5 do
 						local rarity
 						if i==1 then
 							rarity=1
@@ -13194,7 +13194,7 @@ if not SealedDuel then
 						if rarity==3 and packnum==3 then
 							local tempn=3
 							repeat
-								tempn=Duel.GetRandomNumber(1,10)
+								tempn=Duel.GetRandomNumber(1,110)
 							until tempn~=3 and selectpack[tempn]
 							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 						else
@@ -13230,6 +13230,7 @@ if not SealedDuel then
 				if counts[p]~=1 then
 					Duel.TagSwap(p)
 				end
+
 			end
 		end
 	end
