@@ -13287,8 +13287,6 @@ if not SealedDuel then
 						table.insert(groups[p][team],finalcode)
 					end
 				end
-			end
-		end
 		
 		for p=z,o do
 			for team=1,counts[p] do
