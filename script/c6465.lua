@@ -13201,7 +13201,40 @@ if not SealedDuel then
 			numcards = Duel.AnnounceNumber(tp,5,6,7,8,9,10)
 		end
 		
-		-- Player 2	
+				for i=1,numpacks do
+					local packnum=0
+					--random set among selected sets
+					repeat
+					--Number of Packs in Game 110
+						packnum=Duel.GetRandomNumber(1,110)
+					until selectpack[packnum]
+					--Numbers of cards in pack 5
+					for i=1,numcards do
+						local rarity
+						if i==1 then
+							rarity=1
+						elseif i<5 then
+							rarity=1
+						else
+							rarity=1
+						end
+						local code
+						if rarity==3 and packnum==3 then
+							local tempn=3
+							repeat
+								tempn=Duel.GetRandomNumber(1,3)
+							until tempn~=3 and selectpack[tempn]
+							code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
+						else
+							code=pack[packnum][rarity][Duel.GetRandomNumber(1,#pack[packnum][rarity])]
+						end
+						local finalcode=SealedDuel.alternate(code,anime)
+						table.insert(groups[p][team],finalcode)
+					end
+				end
+			end
+		end
+		
 		local dg1=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_DECK,0,nil)
 		if #dg1<40 then
 			Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(6465,6))
@@ -13222,6 +13255,7 @@ if not SealedDuel then
             Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(6465,7))
 			numcards = Duel.AnnounceNumber(1-tp,5,6,7,8,9,10)
 		end
+		
 				for i=1,numpacks do
 					local packnum=0
 					--random set among selected sets
@@ -13271,12 +13305,25 @@ if not SealedDuel then
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
 		
+		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,4))
+		local dg1=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_DECK,0,nil)
+		if #dg1>60 then
+			local rg1=dg1:Select(1-tp,#dg1-60,#dg1-40,nil)
+			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
+		end
 
 		-- New Code for Extra Deck Checking 
 		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
 		local eg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
         if #eg1>15 then
 			local rg1=eg1:Select(tp,#eg1-15,#eg1-0,nil)
+			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
+		end
+		
+		Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(6465,5))
+		local eg1=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_EXTRA,0,nil)
+        if #eg1>15 then
+			local rg1=eg1:Select(1-tp,#eg1-15,#eg1-0,nil)
 			Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 		end
 		
