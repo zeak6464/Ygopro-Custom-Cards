@@ -15,11 +15,11 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,6464)
 	local dice=Duel.GetRandomNumber(1,6)
 	if dice==1 then
-        Debug.ShowHint("Swap Life Points with your opponent.")
 		local lp1=Duel.GetLP(tp)
 		local lp2=Duel.GetLP(1-tp)
 		Duel.SetLP(tp,lp2)
 		Duel.SetLP(1-tp,lp1)
+		Debug.ShowHint("Swap Life Points with your opponent.")
 	end
 	Duel.ShuffleDeck(tp)
 	elseif dice==2 then
