@@ -35,11 +35,11 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	 local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	    Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	elseif dice==4 then
-	 Debug.ShowHint("Destory all monsters on the field.")
+	    Debug.ShowHint("Destory all monsters on the field.")
 	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==5 then
-	Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
+	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
 	 local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	    Duel.Destroy(sg,REASON_EFFECT)
 	else --6
