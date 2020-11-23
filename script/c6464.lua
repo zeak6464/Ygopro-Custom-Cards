@@ -12,7 +12,7 @@ function s.init(c)
 	Duel.RegisterEffect(e1,0)
 end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
-		if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.Hint(HINT_CARD,0,6464)
 	local dice=Duel.GetRandomNumber(1,5)
 	if dice==1 then
 		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
