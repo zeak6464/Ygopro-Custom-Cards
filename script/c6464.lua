@@ -15,18 +15,23 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,6464)
 	local dice=Duel.GetRandomNumber(1,5)
 	if dice==1 then
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
 	elseif dice==2 then
-		Duel.DiscardHand(1-tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
 	elseif dice==3 then
-		Duel.Draw(tp,1,REASON_EFFECT)
+		Duel.Draw(p,1,REASON_EFFECT)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
 	elseif dice==4 then
-		Duel.Draw(1-tp,1,REASON_EFFECT)
+		Duel.Draw(p,1,REASON_EFFECT)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
 	elseif dice==5 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
+		local g=Duel.SelectMatchingCard(p,aux.TRUE,p,0,LOCATION_MZONE,1,1,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	else
+	    Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DESTROY)
 		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 	end
 end
