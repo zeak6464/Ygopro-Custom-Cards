@@ -12,18 +12,17 @@ function s.init(c)
 	Duel.RegisterEffect(e1,0)
 end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,6464)
+	    Duel.Hint(HINT_CARD,0,6464)
 	local dice=Duel.GetRandomNumber(1,6)
 	if dice==1 then
+	    Debug.ShowHint("Swap Life Points with your opponent.")
 		local lp1=Duel.GetLP(tp)
 		local lp2=Duel.GetLP(1-tp)
 		Duel.SetLP(tp,lp2)
 		Duel.SetLP(1-tp,lp1)
-		Debug.ShowHint("Swap Life Points with your opponent.")
-	end
-	Duel.ShuffleDeck(tp)
+	    Duel.ShuffleDeck(tp)
 	elseif dice==2 then
-	Debug.ShowHint("Discard your hand and then draw that many cards.")
+	    Debug.ShowHint("Discard your hand and then draw that many cards.")
 	 local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
 	 local h2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
 	 local g=Duel.GetFieldGroup(tp,LOCATION_HAND,LOCATION_HAND)
