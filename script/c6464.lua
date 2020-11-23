@@ -39,8 +39,6 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.MoveToField(tc,p,p,LOCATION_FZONE,POS_FACEUP,true)
 	Duel.Hint(HINT_CARD,0,tc:GetCode())
-	Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,0))
-	Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(id,0))
 	tc:CreateEffectRelation(te)
 	if tc:IsType(TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then
 		tc:CancelToGrave(false)
