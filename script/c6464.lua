@@ -13,14 +13,13 @@ function s.init(c)
 end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Hint(HINT_CARD,0,6464)
-	local dice=Duel.GetRandomNumber(1,6)
+	local dice=Duel.GetRandomNumber(1,7)
 	if dice==1 then
 	    Debug.ShowHint("Swap Life Points with your opponent.")
 		local lp1=Duel.GetLP(tp)
 		local lp2=Duel.GetLP(1-tp)
 		Duel.SetLP(tp,lp2)
 		Duel.SetLP(1-tp,lp1)
-	    Duel.ShuffleDeck(tp)
 	elseif dice==2 then
 	    Debug.ShowHint("Discard your hand and then draw that many cards.")
 	 local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
@@ -42,7 +41,13 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
 	 local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	    Duel.Destroy(sg,REASON_EFFECT)
-	else --6
+	elseif dice==6 then
+	    Debug.ShowHint("Make All Players Life Points 50% of what they are now.")
+		local lp1=Duel.GetLP(tp)
+		local lp2=Duel.GetLP(1-tp)
+		Duel.SetLP(tp,tp/2)
+		Duel.SetLP(1-tp,1-tp/2)
+	else --7
 	    Debug.ShowHint("Destory all monsters & spells & traps on the field.")
 	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
