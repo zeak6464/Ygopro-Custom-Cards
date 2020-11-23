@@ -31,7 +31,8 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(g,REASON_EFFECT)
 		Debug.ShowHint("5")
 	else
-		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
-		Debug.ShowHint("6")
+		local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	    Duel.Destroy(sg,REASON_EFFECT)
+		Debug.ShowHint("Dark Hole has Activated")
 	end
 end
