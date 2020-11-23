@@ -31,7 +31,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Draw(tp,h1,REASON_EFFECT)
 	    Duel.Draw(1-tp,h2,REASON_EFFECT)
 	elseif dice==3 then
-		Debug.ShowHint("Remove all monsters from both players graveyards from play.")
+		Debug.ShowHint("Remove all cards from both players graveyards from play.")
 	 local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	    Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	elseif dice==4 then
