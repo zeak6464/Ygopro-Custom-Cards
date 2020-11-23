@@ -14,25 +14,24 @@ end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,6464)
 	local dice=Duel.GetRandomNumber(1,6)
-	print(type(dice))
 	if dice==1 then
 		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
-		print(type("1"))
+		Debug.ShowHint("1")
 	elseif dice==2 then
 		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
-		print(type("2"))
+		Debug.ShowHint("2")
 	elseif dice==3 then
 		Duel.Draw(p,1,REASON_EFFECT)
-		print(type("3"))
+		Debug.ShowHint("3")
 	elseif dice==4 then
 		Duel.Draw(p,1,REASON_EFFECT)
-		print(type("4"))
+		Debug.ShowHint("4")
 	elseif dice==5 then
-		print(type("5"))
 		local g=Duel.SelectMatchingCard(p,aux.TRUE,p,0,LOCATION_MZONE,1,1,nil)
 		Duel.Destroy(g,REASON_EFFECT)
+		Debug.ShowHint("5")
 	else
-	    print(type("6"))
 		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		Debug.ShowHint("6")
 	end
 end
