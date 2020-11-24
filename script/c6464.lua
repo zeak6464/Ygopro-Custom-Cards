@@ -14,7 +14,7 @@ end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Hint(HINT_CARD,0,6464)
 		Debug.ShowHint("A rule has been annouced!")
-	local dice=Duel.GetRandomNumber(1,10)
+	local dice=Duel.GetRandomNumber(1,9)
 	if dice==1 then
 	    Debug.ShowHint("Swap Life Points with your opponent.")
 		local lp1=Duel.GetLP(tp)
@@ -54,12 +54,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
         Duel.Draw(p,d,REASON_EFFECT)
 		Duel.BreakEffect()
 		Duel.Recover(p,-1000,REASON_EFFECT)
-		
 	elseif dice==8 then
-	    Debug.ShowHint("Red-Eyes Dark Dragoon has entered the duel.")
-		local token=Duel.CreateToken(tp,37818794)
-		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
-	elseif dice==9 then
 		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then
         Debug.ShowHint("Sorry you and your opponent need at least 1 card in hand inorder to send a card from each players hand to the graveyard.")
 		 return end
@@ -79,7 +74,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.BreakEffect()
 	    Duel.Draw(tp,1,REASON_EFFECT)
 	    Duel.Draw(1-tp,1,REASON_EFFECT)	
-	else --10
+	else --9
 	    Debug.ShowHint("Destory all monsters & Spells & Traps on the field.")
 	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
