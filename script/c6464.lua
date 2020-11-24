@@ -50,13 +50,15 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	elseif dice==7 then
 	    Debug.ShowHint("Draw a card and take 1000 points of damage.")
 	    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	     if Duel.Draw(p,d,REASON_EFFECT)>0 then
+        Duel.Draw(p,d,REASON_EFFECT)
 		Duel.BreakEffect()
 		Duel.Recover(p,-1000,REASON_EFFECT)
-	     end
 	elseif dice==8 then
-	    Debug.ShowHint("Send 1 card to the graveyard from your oppeonts hand.")
-		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then return end
+
+		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then
+        Debug.ShowHint("Sorry you and your opponent need at least 1 card in hand inorder to send a card from each players hand to the graveyard.")
+		 return end
+		Debug.ShowHint("Send 1 card to the graveyard from your oppeonts hand.")
 	    local g1=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	    local g2=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	    Duel.ConfirmCards(tp,g1)
