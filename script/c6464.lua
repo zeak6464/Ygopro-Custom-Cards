@@ -58,7 +58,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	elseif dice==8 then
 	    Debug.ShowHint("Red-Eyes Dark Dragoon has entered the duel.")
 		local token=Duel.CreateToken(tp,37818794)
-		Duel.SpecialSummonStep(token,0,tp,tp,true,true,POS_FACEUP_DEFENSE)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	elseif dice==9 then
 		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then
         Debug.ShowHint("Sorry you and your opponent need at least 1 card in hand inorder to send a card from each players hand to the graveyard.")
