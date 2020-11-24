@@ -31,7 +31,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Draw(1-tp,h2,REASON_EFFECT)
 	elseif dice==3 then
 		Debug.ShowHint("Remove all cards from both players graveyards from play.")
-	 local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
+	 local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
 	    Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	elseif dice==4 then
 	    Debug.ShowHint("Destory all monsters on the field.")
@@ -39,7 +39,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==5 then
 	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
-	 local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
+	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
 	    Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==6 then
 	    Debug.ShowHint("Make All Players Life Points 50% of what they are now.")
@@ -55,7 +55,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Recover(p,-1000,REASON_EFFECT)
 	     end
 	elseif dice==8 then
-	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
+	    Debug.ShowHint("Send 1 card to the graveyard from your oppeonts hand.")
 		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then return end
 	    local g1=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	    local g2=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
