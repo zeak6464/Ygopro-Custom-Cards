@@ -1,4 +1,4 @@
---Command Duel
+--Pegasus Ultimate Challenge Duel
 local s,id=GetID()
 function s.initial_effect(c)
 	aux.EnableExtraRules(c,s,s.init)
@@ -13,7 +13,7 @@ function s.init(c)
 end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Hint(HINT_CARD,0,6464)
-	local dice=Duel.GetRandomNumber(1,7)
+	local dice=Duel.GetRandomNumber(1,9)
 	if dice==1 then
 	    Debug.ShowHint("Swap Life Points with your opponent.")
 		local lp1=Duel.GetLP(tp)
@@ -47,7 +47,32 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 		local lp2=Duel.GetLP(1-tp)
 		Duel.SetLP(tp,math.ceil(Duel.GetLP(tp)/2))
 		Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
-	else --7
+	elseif dice==7 then
+	    Debug.ShowHint("Draw a card and take 1000 points of damage.")
+	    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	     if Duel.Draw(p,d,REASON_EFFECT)>0 then
+		Duel.BreakEffect()
+		Duel.Recover(p,-1000,REASON_EFFECT)
+	     end
+	elseif dice==8 then
+	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
+		 if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 or Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 then return end
+	    local g1=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+	    local g2=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	    Duel.ConfirmCards(tp,g1)
+	    Duel.ConfirmCards(1-tp,g2)
+	    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+	    local sg1=g1:Select(tp,1,1,nil)
+	    Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_DISCARD)
+	    local sg2=g2:Select(1-tp,1,1,nil)
+	    sg1:Merge(sg2)
+	    Duel.SendtoGrave(sg1,REASON_EFFECT+REASON_DISCARD)
+	    Duel.ShuffleHand(tp)
+	    Duel.ShuffleHand(1-tp)
+	    Duel.BreakEffect()
+	    Duel.Draw(tp,1,REASON_EFFECT)
+	    Duel.Draw(1-tp,1,REASON_EFFECT)	
+	else --9
 	    Debug.ShowHint("Destory all monsters & Spells & Traps on the field.")
 	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
