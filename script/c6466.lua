@@ -5,7 +5,7 @@ function s.initial_effect(c)
 end
 function s.init(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
 	e1:SetOperation(s.play)
