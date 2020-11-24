@@ -39,7 +39,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==5 then
 	    Debug.ShowHint("Destroy all Spell and Trap Cards on the field.")
-	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
+	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==6 then
 	    Debug.ShowHint("Make All Players Life Points 50% of what they are now.")
@@ -76,7 +76,7 @@ function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Debug.ShowHint("Destory all monsters & Spells & Traps on the field.")
 	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
-	 local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_STZONE,LOCATION_STZONE,e:GetHandler())
+	 local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	    Duel.Destroy(sg,REASON_EFFECT)
 	end
 end
