@@ -1,8 +1,8 @@
 --Pegasus Ultimate Challenge Duel
 local s,id=GetID()
-function s.initial_effect(c)
-	aux.EnableExtraRules(c,s,s.init)
-end
+--function s.initial_effect(c)
+--	aux.EnableExtraRules(c,s,s.init)
+--end
 function s.init(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
