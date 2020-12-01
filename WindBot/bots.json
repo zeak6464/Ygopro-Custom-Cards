@@ -203,15 +203,27 @@
         "difficulty": 3,
         "masterRules": [3, 4, 5]
 	},
-	    {
+	{
         "name": "ZEldich",
         "deck": "Sample1",
         "difficulty": 3,
         "masterRules": [3, 4, 5]
 	},
-	    {
+	{
         "name": "VWorld",
         "deck": "Sample2",
+        "difficulty": 3,
+        "masterRules": [3, 4, 5]
+	},
+	{
+        "name": "PackOpening1",
+        "deck": "Sample3",
+        "difficulty": 3,
+        "masterRules": [3, 4, 5]
+	},
+	{
+        "name": "PackOpening1",
+        "deck": "Sample4",
         "difficulty": 3,
         "masterRules": [3, 4, 5]
 	}
