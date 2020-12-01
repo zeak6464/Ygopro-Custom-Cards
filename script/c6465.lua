@@ -13117,9 +13117,9 @@ if not SealedDuel then
 		Duel.Hint(HINT_CARD,0,id)
 		--tag variable defining
 		local z,o=tp,1-tp
-		if not aux.AskEveryone(aux.Stringid(6465,1)) then
-			return
-		end
+	--	if not aux.AskEveryone(aux.Stringid(6465,1)) then
+	--		return
+	--	end
 		
 		--pack selection
 		local selectpack={}
