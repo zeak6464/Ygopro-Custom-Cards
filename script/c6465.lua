@@ -1,14 +1,14 @@
 --Pack Opening Duel
 --WIP 5 Packs have been Added 
 
-local selfs={}
-if self_table then
-	function self_table.initial_effect(c) table.insert(selfs,c) end
-end
-local id=6465
-if self_code then id=self_code end
-if not SealedDuel then
-	SealedDuel={}
+--local selfs={}
+--if self_table then
+--	function self_table.initial_effect(c) table.insert(selfs,c) end
+--end
+--local id=6465
+--if self_code then id=self_code end
+--if not SealedDuel then
+--	SealedDuel={}
 	local function finish_setup()
 		--Pre-draw
 		local e1=Effect.GlobalEffect()
