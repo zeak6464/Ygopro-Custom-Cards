@@ -126,7 +126,9 @@ end
 -- Swaping Locaitons 
 
 function c6467.swtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilter,tp,0,LOCATION_ONFIELD,0,nil) end
+    if chkc then return chkc:GetLocation()==LOCATION_MZONE or chkc:GetLocation()==LOCATION_SZONE  and chkc:GetControler()==tp end
+	if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilter,tp,0,LOCATION_ONFIELD,0,nil) 
+	  end
 	local g=Duel.GetMatchingGroup(c6467.afilter,tp,0,LOCATION_ONFIELD,nil)
 end
 
