@@ -76,7 +76,7 @@ function s.initial_effect(c)
 end
 
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER)
 end
 
 function c6467.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -95,9 +95,9 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c6467.mptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp and c6467.afilter(chkc,e,tp) end
+	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp end
 	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+		--and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	local g=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 end
 
