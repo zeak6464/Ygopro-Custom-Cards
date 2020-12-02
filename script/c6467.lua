@@ -143,10 +143,11 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
     local c1=g1:GetFirst()
     local c2=g2:GetFirst()
 
-    -- move c1 to the c2's sequence and vice versa
-    local seq1,seq2=c1:GetSequence(),c2:GetSequence()
-    Duel.MoveSequence(c1,seq2)
-    Duel.MoveSequence(c2,seq1)
+    Duel.SendtoDeck(c1,nil,-2,REASON_EFFECT)
+	Duel.SendtoDeck(c2,nil,-2,REASON_EFFECT)
+	
+	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
 end
 
 
