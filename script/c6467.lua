@@ -59,7 +59,7 @@ function s.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetCode(EVENT_COUNTER)
 	e6:SetRange(LOCATION_SZONE)
-	e6:SetTarget(c6467.sptg)
+--	e6:SetTarget(c6467.sptg)
 	e6:SetOperation(c6467.spop)
 	c:RegisterEffect(e6)
 	--Move s/t to monster zone
