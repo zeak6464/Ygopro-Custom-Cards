@@ -76,7 +76,6 @@ function s.initial_effect(c)
 	local e8=Effect.CreateEffect(c)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetCode(EVENT_COUNTER)
-	e8:SetCategory(CATEGORY_CONTROL)
 	e8:SetDescription(aux.Stringid(id,2))
 	e8:SetTarget(c6467.swtg)
 	e8:SetOperation(c6467.swpop)
@@ -128,7 +127,6 @@ end
 function c6467.swtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilter,tp,0,LOCATION_ONFIELD,0,nil) end
 	local g=Duel.GetMatchingGroup(c6467.afilter,tp,0,LOCATION_ONFIELD,nil)
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
