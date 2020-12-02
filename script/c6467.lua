@@ -134,20 +134,17 @@ function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.HintSelection(g1)
-	
+local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g2=Duel.SelectMatchingCard(1-tp,s.filter,1-tp,LOCATION_SZONE,0,1,1,nil)
+	local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.HintSelection(g1)
+	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
+	local g2=Duel.SelectMatchingCard(1-tp,c6467.afilterr,1-tp,LOCATION_SZONE,0,1,1,nil)
 	Duel.HintSelection(g2)
-	
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
-	
-	Duel.SwapControl(c1,c2,0,0)
+	if Duel.SwapControl(c1,c2,0,0) then
+	end
  
 end
 
