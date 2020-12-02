@@ -69,7 +69,7 @@ function s.initial_effect(c)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetTarget(c6467.mptg)
 	e7:SetOperation(c6467.mpop)
-	c:RegisterEffect(e6)
+	c:RegisterEffect(e7)
 	
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
