@@ -144,7 +144,7 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
 
-    Duel.MoveSequence(c1,c2)
+    Duel.MoveSequence(c1,math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_SZONE,0),2)
 
  
 end
