@@ -72,26 +72,15 @@ function s.initial_effect(c)
 	e7:SetTarget(c6467.mptg)
 	e7:SetOperation(c6467.mpop)
 	c:RegisterEffect(e7)
-	--Swap Card Location 
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_IGNITION)
-	e8:SetCode(EVENT_COUNTER)
-	e8:SetRange(LOCATION_SZONE)
-	e8:SetDescription(aux.Stringid(id,2))
-	e8:SetTarget(c6467.swptg)
-	e8:SetOperation(c6467.swpop)
-	c:RegisterEffect(e8)
 	
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
 end
 
--- Monster Checking
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and GetControler()==tp end 
+	return c:IsType(TYPE_MONSTER)
 end
 
--- Moving S/T to Monster Zone
 function c6467.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_SZONE and chkc:GetControler()==tp and c6467.afilter(chkc,e,tp) end
 	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
@@ -107,9 +96,7 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	 end
 end
 
--- Moving Monster Zone to S/T
 function c6467.mptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
 	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp end
 	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
 		end 
@@ -124,39 +111,7 @@ function c6467.mpop(e,tp,eg,ep,ev,re,r,rp)
 	 end
 end
 
--- Swaping Locaitons 
 
-function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return (chkc:GetLocation()==LOCATION_MZONE or chkc:GetLocation()==LOCATION_SZONE) and chkc:GetControler()==tp end
-	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp) or Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
-		end 
-end
-
-function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.HintSelection(g1)
-	
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g2=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,1,nil)
-	Duel.HintSelection(g2)
-	
-	local c1=g1:GetFirst()
-	local c2=g2:GetFirst()
-
-    Duel.SendtoDeck(c1,nil,-2,REASON_EFFECT)
-	Duel.SendtoDeck(c2,nil,-2,REASON_EFFECT)
-	
-	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
-
- 
-end
-
-
-
--- End of Editing original Seal of Orichalcos
 function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
