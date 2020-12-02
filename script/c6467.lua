@@ -74,7 +74,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e7)
 	--Swap Card Location 
 	local e8=Effect.CreateEffect(c)
-	e8:SetCategory(CATEGORY_CONTROL)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetCode(EVENT_COUNTER)
 	e8:SetRange(LOCATION_SZONE)
@@ -89,7 +88,7 @@ end
 
 -- Monster Checking
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:GetSequence()<5
+	return c:IsType(TYPE_MONSTER)
 end
 
 -- Moving S/T to Monster Zone
@@ -127,27 +126,31 @@ end
 -- Swaping Locaitons 
 
 function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilterr,tp,LOCATION_MZONE,0,1,nil) or Duel.IsExistingMatchingCard(c6467.afilterr,tp,LOCATION_SZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c6467.afilterr,tp,0,LOCATION_MZONE,1,nil) or Duel.IsExistingMatchingCard(c6467.afilterr,tp,0,LOCATION_SZONE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
+	if chkc then return (chkc:GetLocation()==LOCATION_MZONE or chkc:GetLocation()==LOCATION_SZONE) and chkc:GetControler()==tp end
+	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp) or Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
+		end 
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
+
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
-    Duel.HintSelection(g1)
-    Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
-    local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_SZONE,0,1,1,nil)
-    Duel.HintSelection(g2)
-    local c1=g1:GetFirst()
-    local c2=g2:GetFirst()
+	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.HintSelection(g1)
+	
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+	local g2=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.HintSelection(g2)
+	
+	local c1=g1:GetFirst()
+	local c2=g2:GetFirst()
 
     Duel.SendtoDeck(c1,nil,-2,REASON_EFFECT)
 	Duel.SendtoDeck(c2,nil,-2,REASON_EFFECT)
 	
 	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
+
+ 
 end
 
 
