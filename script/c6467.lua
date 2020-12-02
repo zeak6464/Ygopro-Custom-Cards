@@ -143,10 +143,11 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
+	
+	Duel.MoveSequence(c1,c2)
 
-    Duel.SendtoExtraP(c1,tp,REASON_EFFECT)
-    Duel.SendtoExtraP(c2,tp,REASON_EFFECT)
-
+   
+ 
 end
 
 
