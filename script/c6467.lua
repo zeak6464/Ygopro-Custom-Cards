@@ -96,8 +96,6 @@ end
 
 function c6467.mptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp end
-	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
-		end 
 	local g=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 end
 
