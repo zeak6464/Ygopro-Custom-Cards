@@ -86,7 +86,7 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-	    Duel.MoveToField(c,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
+	    Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
 		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP) end
 end
 
