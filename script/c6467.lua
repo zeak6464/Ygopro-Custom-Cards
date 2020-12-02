@@ -146,8 +146,6 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 
     Duel.MoveSequence(c1,c2)
 
-	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
  
 end
 
