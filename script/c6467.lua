@@ -89,7 +89,7 @@ end
 
 -- Monster Checking
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER)
+	return c:IsType(TYPE_MONSTER) and c:GetSequence()<5
 end
 
 -- Moving S/T to Monster Zone
@@ -138,12 +138,11 @@ local c=e:GetHandler()
 	local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.HintSelection(g1)
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
-	local g2=Duel.SelectMatchingCard(1-tp,c6467.afilterr,1-tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.HintSelection(g2)
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
-	if Duel.SwapControl(c1,c2,0,0) then
-	end
+    Duel.MoveSequence
  
 end
 
