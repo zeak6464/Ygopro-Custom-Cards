@@ -126,18 +126,24 @@ end
 -- Swaping Locaitons 
 
 function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp end
-	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
+	if chkc then return (chkc:GetLocation()==LOCATION_MZONE or chkc:GetLocation()==LOCATION_SZONE) and chkc:GetControler()==tp end
+	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp) or Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
 		end 
-	local mc=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
-	local mc=Duel.GetFirstTarget()
-	if mc:IsRelateToEffect(e) then
-	    Duel.MoveToField(mc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	 end
+
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.HintSelection(g1)
+	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
+	local g2=Duel.SelectMatchingCard(tp,s.filter,1-tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.HintSelection(g2)
+	local c1=g1:GetFirst()
+	local c2=g2:GetFirst()
+	if Duel.SwapControl(c1,c2,0,0) then
+
+
 end
 
 
