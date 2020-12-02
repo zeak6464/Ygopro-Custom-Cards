@@ -87,7 +87,7 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 	    Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
-		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP) end
+	 end
 end
 
 function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
