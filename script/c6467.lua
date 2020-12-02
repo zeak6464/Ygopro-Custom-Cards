@@ -62,6 +62,9 @@ function s.initial_effect(c)
 	e6:SetTarget(c6467.sptg)
 	e6:SetOperation(c6467.spop)
 	c:RegisterEffect(e6)
+	--Move s/t to monster zone
+
+	
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
 end
@@ -83,6 +86,7 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
+	    Duel.MoveToField(c,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
 		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP) end
 end
 
