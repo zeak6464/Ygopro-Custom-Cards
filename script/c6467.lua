@@ -63,7 +63,13 @@ function s.initial_effect(c)
 	e6:SetOperation(c6467.spop)
 	c:RegisterEffect(e6)
 	--Move s/t to monster zone
-
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_IGNITION)
+	e7:SetCode(EVENT_COUNTER)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetTarget(c6467.mptg)
+	e7:SetOperation(c6467.mpop)
+	c:RegisterEffect(e6)
 	
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
@@ -78,7 +84,6 @@ function c6467.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	local g=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
-	--Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 
 function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -88,6 +93,23 @@ function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
 	 end
 end
+
+function c6467.mptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp and c6467.afilter(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
+		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	local g=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
+end
+
+function c6467.mpop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+	    Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	 end
+end
+
+
 
 function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
