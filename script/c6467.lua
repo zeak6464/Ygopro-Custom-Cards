@@ -74,6 +74,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e7)
 	--Swap Card Location 
 	local e8=Effect.CreateEffect(c)
+	e8:SetCategory(CATEGORY_CONTROL)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetCode(EVENT_COUNTER)
 	e8:SetRange(LOCATION_SZONE)
@@ -129,9 +130,11 @@ function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return (chkc:GetLocation()==LOCATION_MZONE or chkc:GetLocation()==LOCATION_SZONE) and chkc:GetControler()==tp end
 	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp) or Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_SZONE,0,1,nil,e,tp)
 		end 
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
 
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
@@ -143,9 +146,8 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
-
-    Duel.MoveSequence(c1,math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_SZONE,0),2)end
-
+	
+	Duel.SwapControl(c1,c2,0,0)
  
 end
 
