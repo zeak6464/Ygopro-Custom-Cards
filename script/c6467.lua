@@ -136,18 +136,19 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g1=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.HintSelection(g1)
-	local c1=g1:GetFirst()
-
 	
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g2=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,1,nil)
 	Duel.HintSelection(g2)
+	
+	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
 
+    Duel.SendtoExtraP(c1,tp,REASON_EFFECT)
+    Duel.SendtoExtraP(c2,tp,REASON_EFFECT)
 	
-	Duel.MoveToField(c1,tp,tp,LOCATION_EXTRA,POS_FACEUP,true)
-    Duel.MoveToField(c2,tp,tp,LOCATION_EXTRA,POS_FACEUP,true)
-   
+	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
  
 end
 
