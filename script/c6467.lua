@@ -141,9 +141,7 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g2)
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
-	if Duel.SwapControl(c1,c2,0,0) then
-
-
+	if Duel.SwapControl(c1,c2,0,0) then end
 end
 
 
