@@ -88,7 +88,7 @@ end
 
 -- Monster Checking
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER)
+	return c:IsType(TYPE_MONSTER) and GetControler()==tp end 
 end
 
 -- Moving S/T to Monster Zone
