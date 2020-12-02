@@ -112,7 +112,6 @@ function c6467.mpop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-
 function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
