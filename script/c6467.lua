@@ -133,17 +133,20 @@ function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_ONFIELD,0,1,1,nil)
-	Duel.HintSelection(g1)
-	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
-	local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_ONFIELD,0,1,1,nil)
-	Duel.HintSelection(g2)
-	local c1=g1:GetFirst()
-	local c2=g2:GetFirst()
-    Duel.MoveSequence(c1,c2)
- 
+    local c=e:GetHandler()
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+    local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
+    Duel.HintSelection(g1)
+    Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONTROL)
+    local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_SZONE,0,1,1,nil)
+    Duel.HintSelection(g2)
+    local c1=g1:GetFirst()
+    local c2=g2:GetFirst()
+
+    -- move c1 to the c2's sequence and vice versa
+    local seq1,seq2=c1:GetSequence(),c2:GetSequence()
+    Duel.MoveSequence(c1,seq2)
+    Duel.MoveSequence(c2,seq1)
 end
 
 
