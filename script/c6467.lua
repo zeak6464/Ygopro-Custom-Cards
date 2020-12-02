@@ -142,7 +142,7 @@ local c=e:GetHandler()
 	Duel.HintSelection(g2)
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
-    Duel.MoveSequence
+    Duel.MoveSequence(c1,c2)
  
 end
 
