@@ -141,7 +141,7 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g1)
 	
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g2=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,1,nil)
+	local g2=Duel.SelectMatchingCard(1-tp,s.filter,1-tp,LOCATION_SZONE,0,1,1,nil)
 	Duel.HintSelection(g2)
 	
 	local c1=g1:GetFirst()
