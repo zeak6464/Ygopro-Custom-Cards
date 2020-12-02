@@ -78,7 +78,7 @@ function s.initial_effect(c)
 end
 
 function c6467.afilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER)  
+	return c:IsType(TYPE_MONSTER) and c:GetSequence()<5
 end
 
 function c6467.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -90,7 +90,6 @@ end
 
 function c6467.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
-	if c:IsInExtraMZone then return end 
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 	    Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
@@ -106,7 +105,6 @@ end
 
 function c6467.mpop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
-	if c:IsInExtraMZone then return end 
 	local mc=Duel.GetFirstTarget()
 	if mc:IsRelateToEffect(e) then
 	    Duel.MoveToField(mc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
