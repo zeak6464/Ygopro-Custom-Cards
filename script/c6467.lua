@@ -143,6 +143,9 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
+	
+	Duel.MoveToField(c1,tp,tp,LOCATION_EXTRA,POS_FACEUP,true)
+	Duel.MoveToField(c2,tp,tp,LOCATION_EXTRA,POS_FACEUP,true)
 	if Duel.SwapControl(c1,c2,0,0) then end
 end
 
