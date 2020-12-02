@@ -144,9 +144,8 @@ function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 	local c1=g1:GetFirst()
 	local c2=g2:GetFirst()
 
-    Duel.SendtoExtraP(c1,tp,REASON_EFFECT)
-    Duel.SendtoExtraP(c2,tp,REASON_EFFECT)
-	
+    Duel.MoveSequence(c1,c2)
+
 	Duel.MoveToField(c1,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
  
