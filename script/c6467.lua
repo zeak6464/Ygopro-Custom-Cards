@@ -72,15 +72,6 @@ function s.initial_effect(c)
 	e7:SetTarget(c6467.mptg)
 	e7:SetOperation(c6467.mpop)
 	c:RegisterEffect(e7)
-	--Swapping Cards
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_IGNITION)
-	e8:SetCode(EVENT_COUNTER)
-	e8:SetRange(LOCATION_SZONE)
-	e8:SetDescription(aux.Stringid(id,2))
-	e8:SetTarget(c6467.swptg)
-	e8:SetOperation(c6467.swpop)
-	c:RegisterEffect(e8)
 	
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
@@ -121,55 +112,6 @@ function c6467.mpop(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.MoveToField(mc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	 end
 end
-
---Swapping Cards 
-
-function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilterr,tp,LOCATION_MZONE,0,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_SZONE,0,1,nil)
-        and Duel.IsExistingMatchingCard(c6467.afilterr,tp,0,LOCATION_MZONE,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,0,LOCATION_SZONE,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
-end
-
-function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
-    Duel.HintSelection(g1)
-	
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_SZONE,0,1,1,nil)
-    Duel.HintSelection(g2)
-	
-    local c1=g1:GetFirst()
-    local c2=g2:GetFirst()
-    local cp1=c1:GetControler()
-    local cp2=c2:GetControler()
-    local pos1=c1:IsPosition(POS_FACEUP) 
-    local pos2=c2:IsPosition(POS_FACEUP) 
-    local seq1=c1:GetSequence()
-    local seq2=c2:GetSequence()
-    local zone1=bit.lshift(0x1,seq1)
-    local zone2=bit.lshift(0x1,seq2)
-    local rest1=false
-    local rest2=false
-    if c1:IsLocation(LOCATION_MZONE) and c1:IsPosition(POS_FACEUP) then rest1=true end
-    if c2:IsLocation(LOCATION_MZONE) and c2:IsPosition(POS_FACEUP) then rest2=true end
-    --move c2
-    Duel.MoveSequence(c1,0)
-    if c2:IsLocation(LOCATION_MZONE) then
-        Duel.MoveToField(c2,cp1,cp2,LOCATION_SZONE,pos2,true,zone1)
-    elseif c2:IsLocation(LOCATION_SZONE) then
-        Duel.MoveToField(c2,cp1,cp2,LOCATION_MZONE,pos2,true,zone1)
-    end
-    --move c1
-    Duel.MoveSequence(c2,0)
-    if c1:IsLocation(LOCATION_MZONE) then
-        Duel.MoveToField(c1,cp1,cp2,LOCATION_SZONE,pos1,true,zone2)
-    elseif c1:IsLocation(LOCATION_SZONE) then
-        Duel.MoveToField(c1,cp1,cp2,LOCATION_MZONE,pos1,true,zone2)
-    end
-end
-
 
 
 
