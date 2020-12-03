@@ -100,7 +100,7 @@ end
 --Move s/t to monster zone
 function c6467.mptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()==tp end
-	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,0,nil,e,tp)
+	if chk==0 then return Duel.IsExistingTarget(c6467.afilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end 
 	local mc=Duel.SelectTarget(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
