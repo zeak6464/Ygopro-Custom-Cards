@@ -155,8 +155,8 @@ function Duel.SwapSequence(c1,c2)
 end
 
 function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_MZONE,0,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_SZONE,0,1,nil)
-        and Duel.IsExistingMatchingCard(c1.afilterr,tp,0,LOCATION_MZONE,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,0,LOCATION_SZONE,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(c6467.afilterr,tp,LOCATION_MZONE,0,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_SZONE,0,1,nil)
+        and Duel.IsExistingMatchingCard(c6467.afilterr,tp,0,LOCATION_MZONE,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,0,LOCATION_SZONE,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
 end
 
