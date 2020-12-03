@@ -152,9 +152,7 @@ function Duel.SwapSequence(c1,c2)
         Duel.MoveToField(c1,cp1,cp2,LOCATION_MZONE,pos1,true,zone2)
     end
     return Duel.SwapSequence(c1,c2)
-	end
-   end
-  end
+end
 
 function c6467.swptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chk==0 then return Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_MZONE,0,1,nil) or Duel.IsExistingMatchingCard(c1.afilterr,tp,LOCATION_SZONE,0,1,nil)
