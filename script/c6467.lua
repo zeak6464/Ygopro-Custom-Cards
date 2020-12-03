@@ -163,11 +163,11 @@ end
 function c6467.swpop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local g1=Duel.SelectMatchingCard(tp,c1.afilter,tp,LOCATION_MZONE,0,1,1,nil)
+    local g1=Duel.SelectMatchingCard(tp,c6467.afilter,tp,LOCATION_MZONE,0,1,1,nil)
     Duel.HintSelection(g1)
 	
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local g2=Duel.SelectMatchingCard(tp,c1.afilterr,tp,LOCATION_SZONE,0,1,1,nil)
+    local g2=Duel.SelectMatchingCard(tp,c6467.afilterr,tp,LOCATION_SZONE,0,1,1,nil)
     Duel.HintSelection(g2)
 	
     local c1=g1:GetFirst()
