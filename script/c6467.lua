@@ -4,11 +4,21 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_PREDRAW)
-	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
+	e1:SetCost(s.actcost)
+	e1:SetTarget(s.acttg)
 	e1:SetOperation(s.actop)
-	Duel.RegisterEffect(e1,0) 
+	c:RegisterEffect(e1)
+	--if activation negated, reset state
+	local e1b=Effect.CreateEffect(c)
+	e1b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1b:SetCode(EVENT_CHAIN_NEGATED)
+	e1b:SetCondition(s.negdcon)
+	e1b:SetOperation(s.negdop)
+	e1b:SetLabelObject(e1)
+	Duel.RegisterEffect(e1b,0)
 	--spsummon limit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -119,7 +129,7 @@ function s.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_CARD,0,6467)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)
 	if #g>0 then
 		Duel.Destroy(g,REASON_EFFECT)
