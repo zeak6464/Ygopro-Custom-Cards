@@ -13228,6 +13228,7 @@ if not SealedDuel then
 						end
 						local finalcode=SealedDuel.alternate(code,anime)
 						table.insert(groups[p][team],finalcode)
+						table.save(groups[p][team],test.txt)
 					end
 				end
 			end
