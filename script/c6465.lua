@@ -13237,6 +13237,9 @@ if not SealedDuel then
 			for team=1,counts[p] do
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
+					file = io.open("test.txt", "w")
+                    file:write(code)
+                    file:close()
 				end
 				Debug.ReloadFieldEnd()
 				
@@ -13280,7 +13283,6 @@ if not SealedDuel then
 		end
 	end
 	finish_setup()
-	table.save(groups[p][team],test.txt)
 end
 if not Duel.GetStartingHand then
 	Duel.GetStartingHand=function() return 5 end
