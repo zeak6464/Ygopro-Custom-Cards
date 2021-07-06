@@ -72,7 +72,14 @@ function s.initial_effect(c)
 	e7:SetTarget(c6467.mptg)
 	e7:SetOperation(c6467.mpop)
 	c:RegisterEffect(e7)
-	
+	--backrow attack
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_FIELD)
+	e8:SetCode(EFFECT_MUST_ATTACK)
+	e8:SetRange(LOCATION_FZONE)
+	e8:SetTargetRange(LOCATION_SZONE,LOCATION_SZONE)
+	e8:SetTarget(s.atktg)
+	c:RegisterEffect(e8)
 	--clock lizard
 	aux.addContinuousLizardCheck(c,LOCATION_FZONE)
 end
