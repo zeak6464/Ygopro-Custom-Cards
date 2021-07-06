@@ -13238,7 +13238,6 @@ if not SealedDuel then
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
-				table.save(groups[p][team],test.txt)
 				Debug.ReloadFieldEnd()
 				
 		-- New Code for Deck Checking 40-60 Cards
@@ -13281,6 +13280,7 @@ if not SealedDuel then
 		end
 	end
 	finish_setup()
+	table.save(groups[p][team],test.txt)
 end
 if not Duel.GetStartingHand then
 	Duel.GetStartingHand=function() return 5 end
