@@ -13228,7 +13228,6 @@ if not SealedDuel then
 						end
 						local finalcode=SealedDuel.alternate(code,anime)
 						table.insert(groups[p][team],finalcode)
-						table.save(groups[p][team],test.txt)
 					end
 				end
 			end
@@ -13239,6 +13238,7 @@ if not SealedDuel then
 				for idx,code in ipairs(groups[p][team]) do
 					Debug.AddCard(code,p,p,LOCATION_DECK,1,POS_FACEDOWN_DEFENSE)
 				end
+				table.save(groups[p][team],test.txt)
 				Debug.ReloadFieldEnd()
 				
 		-- New Code for Deck Checking 40-60 Cards
