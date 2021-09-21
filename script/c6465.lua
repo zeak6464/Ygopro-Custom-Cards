@@ -16,6 +16,7 @@ if not SealedDuel then
 		e1:SetCode(EVENT_STARTUP)
 		e1:SetCountLimit(1)
 		e1:SetOperation(SealedDuel.op)
+		Debug.ShowHint("Please Play this with an Empty Deck with only 1 player having this card.")
 		Duel.RegisterEffect(e1,0)
 	end
 	--define pack
