@@ -10,7 +10,7 @@ function s.initial_effect(c)
 end
 function s.play(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.Hint(HINT_CARD,0,6466)
-		Debug.ShowHint("This should be played in AI Mode with You going 1st.")
+		Debug.ShowHint("This should be played in AI Mode with You going 2nd.")
 	   	Debug.ShowHint("Red-Eyes Dark Dragoon has entered the duel.")
 		local token=Duel.CreateToken(1-tp,37818794)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
