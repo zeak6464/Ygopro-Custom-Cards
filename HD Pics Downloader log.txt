@@ -1,4 +1,0 @@
-Version not checked due HTTP Error 404: Not Found
-Download setup initialized...
-newcards.ydk not downloaded: HTTP Error 404: Not Found
-Program exited 
