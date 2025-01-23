@@ -42739,14 +42739,24 @@ if not SealedDuel then
 		
         --pack selection
         local selectpack={}
-        -- Create table of available pack numbers
-        local packNumbers = {}
-        for i=1,986 do
-            table.insert(packNumbers, i)
+        -- Create table of available pack numbers in chunks of 218
+        local function getPackSelection(startNum, endNum)
+            local packNumbers = {}
+            for i=startNum,math.min(endNum, 986) do
+                table.insert(packNumbers, i)
+            end
+            return Duel.SelectCardsFromCodes(tp,1,#packNumbers,false,true,table.unpack(packNumbers))
         end
 
-        for _,sel in ipairs({Duel.SelectCardsFromCodes(tp,1,986,false,true,table.unpack(packNumbers))}) do
-            selectpack[sel[2]]=true
+        -- Get selections in chunks of 218
+        for chunk=1,5 do  -- 5 chunks to cover all 986 packs
+            local startNum = (chunk-1)*218 + 1
+            local endNum = chunk*218
+            if startNum <= 986 then  -- Only process if we haven't exceeded total packs
+                for _,sel in ipairs({getPackSelection(startNum, endNum)}) do
+                    selectpack[sel[2]]=true
+                end
+            end
         end
 
         --pack checking
