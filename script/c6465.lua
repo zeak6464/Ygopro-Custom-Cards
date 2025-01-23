@@ -42737,16 +42737,35 @@ if not SealedDuel then
 	--		return
 	--	end
 		
-		--pack selection
-		local selectpack={}
-		for _,sel in ipairs({Duel.SelectCardsFromCodes(tp,1,110,false,true,5,4,3,2,1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110)}) do
-			selectpack[sel[2]]=true
-		end
-		
-		--pack checking
-		if selectpack[3] and not selectpack[1] and not selectpack[2] and not selectpack[4] and not selectpack[5] and not selectpack[6] and not selectpack[7] and not selectpack[8] and not selectpack[9]  and not selectpack[10] and not selectpack[11] and not selectpack[12] and not selectpack[13] and not selectpack[14] and not selectpack[15] and not selectpack[16] and not selectpack[17] and not selectpack[18] and not selectpack[19] and not selectpack[20]  and not selectpack[21]  and not selectpack[22]  and not selectpack[23]  and not selectpack[24]  and not selectpack[25]  and not selectpack[26]  and not selectpack[27]  and not selectpack[28]  and not selectpack[29]  and not selectpack[30]  and not selectpack[31]  and not selectpack[32]  and not selectpack[33]  and not selectpack[34]  and not selectpack[35]  and not selectpack[36]  and not selectpack[37]  and not selectpack[38]  and not selectpack[39]  and not selectpack[40]  and not selectpack[41]  and not selectpack[42]  and not selectpack[43]  and not selectpack[44]  and not selectpack[45]  and not selectpack[46]  and not selectpack[47]  and not selectpack[48]  and not selectpack[49]  and not selectpack[50]  and not selectpack[51]  and not selectpack[52]  and not selectpack[53]  and not selectpack[54]  and not selectpack[55]  and not selectpack[56]  and not selectpack[57]  and not selectpack[58]  and not selectpack[59]  and not selectpack[60]  and not selectpack[61]  and not selectpack[62]  and not selectpack[63]  and not selectpack[64]  and not selectpack[65]  and not selectpack[66]  and not selectpack[67]  and not selectpack[68]  and not selectpack[69]  and not selectpack[70]  and not selectpack[71]  and not selectpack[72]  and not selectpack[73]  and not selectpack[74]  and not selectpack[75]  and not selectpack[76]  and not selectpack[77]  and not selectpack[77]  and not selectpack[78]  and not selectpack[79]  and not selectpack[80]  and not selectpack[81]  and not selectpack[82]  and not selectpack[83]  and not selectpack[84]  and not selectpack[85]  and not selectpack[86]  and not selectpack[87]  and not selectpack[88]  and not selectpack[89]  and not selectpack[90]  and not selectpack[91]  and not selectpack[92]  and not selectpack[93]  and not selectpack[94]  and not selectpack[95]  and not selectpack[96]  and not selectpack[97]  and not selectpack[98]  and not selectpack[99]  and not selectpack[100]  and not selectpack[101]  and not selectpack[102]  and not selectpack[103]  and not selectpack[104]  and not selectpack[105]  and not selectpack[106]  and not selectpack[107]  and not selectpack[108]  and not selectpack[109]  and not selectpack[110]  then
-			selectpack[2]=true
-		end
+        --pack selection
+        local selectpack={}
+        -- Create table of available pack numbers
+        local packNumbers = {}
+        for i=1,986 do
+            table.insert(packNumbers, i)
+        end
+
+        for _,sel in ipairs({Duel.SelectCardsFromCodes(tp,1,986,false,true,table.unpack(packNumbers))}) do
+            selectpack[sel[2]]=true
+        end
+
+        --pack checking
+        local function hasOnlyPack3()
+            -- Check if only pack 3 is selected
+            if not selectpack[3] then return false end
+            
+            -- Check all other packs are not selected
+            for i=1,986 do
+                if i ~= 3 and selectpack[i] then
+                    return false
+                end
+            end
+            return true
+        end
+
+        if hasOnlyPack3() then
+            selectpack[2] = true
+        end
 		
 		--treat as all monster types
 		if Duel.AskEveryone(aux.Stringid(6465,0)) then
