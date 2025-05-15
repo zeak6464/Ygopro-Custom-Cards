@@ -44,8 +44,13 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Debug.ShowHint(announce[idx])
 	Duel.Hint(HINT_MESSAGE,tp,HINTMSG_ANNOUNCE)
 	
-	--Get a random rule
-	local dice=Duel.GetRandomNumber(1,40)
+	--Get a random rule (fixed function)
+	local dice=0
+	if Duel.IsMainPhase() then
+		dice=Duel.GetRandomNumber(1,40)
+	else
+		dice=math.random(1,40)
+	end
 	
 	if dice==1 then
 		Debug.ShowHint("All players reveal the top card of their deck. You may play that card immediately, starting with the turn player.")
