@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(s.actcost)
 	c:RegisterEffect(e1)
 	
 	--Cannot be destroyed by effects
@@ -35,43 +36,112 @@ function s.initial_effect(c)
 	e4:SetOperation(s.plop)
 	c:RegisterEffect(e4)
 	
-	--Enable monster effects in S/T zone
+	--[ANIME] Lose the duel when destroyed
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetCode(EFFECT_ACTIVATE_COST)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetRange(LOCATION_FZONE)
-	e5:SetTargetRange(1,0)
-	e5:SetTarget(s.actarget)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e5:SetCode(EVENT_LEAVE_FIELD)
+	e5:SetCondition(s.losecon)
+	e5:SetOperation(s.loseop)
 	c:RegisterEffect(e5)
 	
-	--Treat as monsters for effects
+	--[ANIME] Cannot use Extra Deck
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetCode(EFFECT_CHANGE_TYPE)
+	e6:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e6:SetRange(LOCATION_FZONE)
-	e6:SetTargetRange(LOCATION_SZONE,0)
-	e6:SetTarget(s.tgtg)
-	e6:SetValue(TYPE_MONSTER+TYPE_EFFECT)
+	e6:SetTargetRange(1,0)
+	e6:SetTarget(s.splimit)
 	c:RegisterEffect(e6)
 	
-	--Keep monster properties in S/T zone
+	--[ANIME] Only DARK monsters can attack
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(EFFECT_REMAIN_FIELD)
+	e7:SetCode(EFFECT_CANNOT_ATTACK)
 	e7:SetRange(LOCATION_FZONE)
-	e7:SetTargetRange(LOCATION_SZONE,0)
-	e7:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_MONSTER))
+	e7:SetTargetRange(LOCATION_MZONE,0)
+	e7:SetTarget(s.attlimit)
 	c:RegisterEffect(e7)
 	
-	--Move between zones
+	--[ANIME] Direct attack protection
 	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(id,3))  -- "Move/Swap monster"
-	e8:SetType(EFFECT_TYPE_IGNITION)
+	e8:SetType(EFFECT_TYPE_FIELD)
+	e8:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
 	e8:SetRange(LOCATION_FZONE)
-	e8:SetTarget(s.movetg)
-	e8:SetOperation(s.moveop)
+	e8:SetTargetRange(0,LOCATION_MZONE)
+	e8:SetCondition(s.protcon)
 	c:RegisterEffect(e8)
+	
+	--Enable monster effects in S/T zone
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetCode(EFFECT_ACTIVATE_COST)
+	e9:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e9:SetRange(LOCATION_FZONE)
+	e9:SetTargetRange(1,0)
+	e9:SetTarget(s.actarget)
+	c:RegisterEffect(e9)
+	
+	--Treat as monsters for effects
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_CHANGE_TYPE)
+	e10:SetRange(LOCATION_FZONE)
+	e10:SetTargetRange(LOCATION_SZONE,0)
+	e10:SetTarget(s.tgtg)
+	e10:SetValue(TYPE_MONSTER+TYPE_EFFECT)
+	c:RegisterEffect(e10)
+	
+	--Keep monster properties in S/T zone
+	local e11=Effect.CreateEffect(c)
+	e11:SetType(EFFECT_TYPE_FIELD)
+	e11:SetCode(EFFECT_REMAIN_FIELD)
+	e11:SetRange(LOCATION_FZONE)
+	e11:SetTargetRange(LOCATION_SZONE,0)
+	e11:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_MONSTER))
+	c:RegisterEffect(e11)
+	
+	--Move between zones
+	local e12=Effect.CreateEffect(c)
+	e12:SetDescription(aux.Stringid(id,3))
+	e12:SetType(EFFECT_TYPE_IGNITION)
+	e12:SetRange(LOCATION_FZONE)
+	e12:SetTarget(s.movetg)
+	e12:SetOperation(s.moveop)
+	c:RegisterEffect(e12)
+end
+
+-- Activation cost - anime version required sacrifice
+function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	-- Announce its dramatic activation
+	Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,4)) -- "The Seal of Orichalcos has been activated!"
+end
+
+-- Lose duel condition/operation
+function s.losecon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_FZONE) 
+		and rp~=tp and (r&REASON_EFFECT)~=0
+end
+
+function s.loseop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Win(1-tp,WIN_REASON_SEAL_OF_ORICHALCOS)
+end
+
+-- Extra deck restriction
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsLocation(LOCATION_EXTRA)
+end
+
+-- Only DARK monsters can attack
+function s.attlimit(e,c)
+	return not c:IsAttribute(ATTRIBUTE_DARK)
+end
+
+-- Protection when no monsters
+function s.protcon(e)
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)==0
 end
 
 function s.plfilter(c)
