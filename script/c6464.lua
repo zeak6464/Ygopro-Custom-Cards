@@ -5,6 +5,7 @@ local s,id=GetID()
 --end
 --function s.init(c)
 function s.initial_effect(c)
+	aux.AddSkillProcedure(c,1,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_STARTUP)
