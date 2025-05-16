@@ -17,19 +17,20 @@ function s.initial_effect(c)
 	if not s.global_check then
 		s.global_check=true
 		s.turn_counter=0
-		s.last_rule=0
+		s.rule_index=1
 	end
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	s.turn_counter=s.turn_counter+1
-	--Apply rule changes every 2-3 turns
-	local mod = s.turn_counter%3
-	return mod==0 or mod==1 -- Gives roughly 2/3 probability
+	--Apply rule changes every other turn
+	return s.turn_counter%2==0
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
+	
+	--Fixed announcements instead of random
 	local announce={
 		"Greetings Duelists!",
 		"Ooh, a rule change!",
@@ -39,19 +40,14 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		"Kaiba-boy would hate this one!",
 		"Hmm, let me think... ah, perfect!"
 	}
-	-- Use os.time() for seed to get a different result each time
-	math.randomseed(os.time())
-	local idx=math.random(#announce)
 	
+	--Use fixed cycling instead of random
+	local idx = (s.turn_counter/2) % #announce + 1
 	Debug.ShowHint(announce[idx])
-	Duel.Hint(HINT_MESSAGE,tp,HINTMSG_ANNOUNCE)
 	
-	--Get a random rule
-	local dice=0
-	repeat
-		dice=math.random(40)
-	until dice~=s.last_rule
-	s.last_rule=dice
+	--Get rule based on counter
+	local dice = s.rule_index
+	s.rule_index = (s.rule_index % 40) + 1
 	
 	if dice==1 then
 		Debug.ShowHint("All players reveal the top card of their deck. You may play that card immediately, starting with the turn player.")
