@@ -5,10 +5,9 @@ local s,id=GetID()
 --end
 --function s.init(c)
 function s.initial_effect(c)
-	aux.AddSkillProcedure(c,1,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_STARTUP)
+	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
 	Debug.ShowHint("Greetings Duelists!")
 	e1:SetOperation(s.operation)
@@ -18,7 +17,6 @@ end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
-	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	
 	local announce={
 		"Ooh, a rule change!",
@@ -373,9 +371,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SetLP(tp,math.ceil(Duel.GetLP(tp)/2))
 		Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
 	end
-	
-	--Flip skill back to indicate it can be used again
-	Duel.Hint(HINT_SKILL_FLIP,tp,id|(0<<32))
 end
 
 -- Helper functions for the various effect limitations
