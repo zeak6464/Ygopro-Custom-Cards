@@ -7,16 +7,11 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
-	e1:SetRange(0xff)
 	Debug.ShowHint("Greetings Duelists!")
-	e1:SetCondition(s.con)
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,0)
 end
 
-function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()==1
-end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
