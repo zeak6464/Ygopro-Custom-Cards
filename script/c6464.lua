@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
+	Debug.ShowHint("Greetings Duelists!")
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,0)
 end
@@ -19,7 +20,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	
 	local announce={
-		"Greetings Duelists!",
 		"Ooh, a rule change!",
 		"Let's make this more interesting!",
 		"I have a special surprise for you!",
