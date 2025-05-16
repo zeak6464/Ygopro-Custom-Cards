@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1)
 	Debug.ShowHint("Greetings Duelists!")
 	e1:SetOperation(s.operation)
-	Duel.RegisterEffect(e1)
+	Duel.RegisterEffect(e1,0)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
