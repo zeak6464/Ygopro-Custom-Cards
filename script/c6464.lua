@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e1:SetRange(0xff)
 	e1:SetOperation(s.startup)
 	c:RegisterEffect(e1)
+end
 
 
 function s.startup(e,tp,eg,ep,ev,re,r,rp)
