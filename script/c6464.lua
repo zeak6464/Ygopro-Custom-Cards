@@ -5,77 +5,68 @@ local s,id=GetID()
 --end
 --function s.init(c)
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x1477) --Custom counter for Pegasus challenges
+	--Skill
+	aux.AddSkillProcedure(c,1,false)
 	
-	--Activate
+	--Activate automatically at start of duel
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_STARTUP)
 	e1:SetCountLimit(1)
-	Duel.RegisterEffect(e1,0)
+	e1:SetRange(0xff)
+	e1:SetOperation(s.startup)
+	c:RegisterEffect(e1)
 	
-	--Add counter
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_COUNTER)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetCountLimit(1)
-	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e2:SetOperation(s.ctop)
-	c:RegisterEffect(e2)
-	
-	--Apply Pegasus Challenge when counter reaches threshold
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetRange(LOCATION_FZONE)
-	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e3:SetCondition(s.condition)
-	e3:SetOperation(s.operation)
-	c:RegisterEffect(e3)
-	
-	--Initialize used rules
+	--Initialize variables
 	if not s.global_check then
 		s.global_check=true
+		s.turn_counter=0
 		s.last_rule=0
 		s.used_rules={}
 	end
 end
 s.counter_place_list={0x1477} --Register counter type
 
---Add counter each standby phase
-function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	e:GetHandler():AddCounter(0x1477,1)
-	Debug.ShowHint("The Pegasus Challenge counter is now at "..e:GetHandler():GetCounter(0x1477))
+function s.startup(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
+	Duel.Hint(HINT_CARD,tp,id)
+	
+	--Set up periodic challenge effect
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCondition(s.condition)
+	e1:SetOperation(s.operation)
+	Duel.RegisterEffect(e1,tp)
+	
+	Debug.ShowHint("The Pegasus Ultimate Challenge has begun!")
 end
 
---Trigger challenge when counter reaches 2-3
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetHandler():GetCounter(0x1477)
-	if ct>=2 and Duel.GetRandomNumber(1,3)<=ct then
-		e:GetHandler():ResetCounter(0x1477)
-		return true
-	end
-	return false
+	s.turn_counter=s.turn_counter+1
+	
+	--Trigger a challenge every 2-3 turns
+	local trigger_turn = s.turn_counter % Duel.GetRandomNumber(2,3) == 0
+	
+	--Extra condition if needed
+	return trigger_turn and aux.CanActivateSkill(tp)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,id)
+	Duel.Hint(HINT_CARD,tp,id)
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
+	
 	local announce={
 		"Greetings Duelists!",
 		"Ooh, a rule change!",
 		"Let's make this more interesting!",
 		"I have a special surprise for you!",
 		"This should spice things up!",
-		"Kaiba-boy would hate this one!",
-		"Hmm, let me think... ah, perfect!"
+		"Kaiba-boy would hate this one!"
 	}
 	local idx=Duel.GetRandomNumber(1,#announce)
 	
 	Debug.ShowHint(announce[idx])
-	Duel.Hint(HINT_MESSAGE,tp,HINTMSG_ANNOUNCE)
 	
 	--Get a random rule, but not the same as last time
 	local dice=0
@@ -419,6 +410,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SetLP(tp,math.ceil(Duel.GetLP(tp)/2))
 		Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
 	end
+	
+	--Flip skill back to indicate it can be used again
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(0<<32))
 end
 
 -- Helper functions for the various effect limitations
