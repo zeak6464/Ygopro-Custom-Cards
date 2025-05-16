@@ -8,13 +8,8 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
 	Debug.ShowHint("Greetings Duelists!")
-	e1:SetCondition(s.con)
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1)
-end
-
-function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()==1
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
