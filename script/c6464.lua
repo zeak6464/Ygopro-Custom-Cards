@@ -16,16 +16,7 @@ function s.initial_effect(c)
 	e1:SetRange(0xff)
 	e1:SetOperation(s.startup)
 	c:RegisterEffect(e1)
-	
-	--Initialize variables
-	if not s.global_check then
-		s.global_check=true
-		s.turn_counter=0
-		s.last_rule=0
-		s.used_rules={}
-	end
-end
-s.counter_place_list={0x1477} --Register counter type
+
 
 function s.startup(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
@@ -43,11 +34,6 @@ function s.startup(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	s.turn_counter=s.turn_counter+1
-	
-	--Trigger a challenge every 2-3 turns
-	local trigger_turn = s.turn_counter % Duel.GetRandomNumber(2,3) == 0
-	
 	--Extra condition if needed
 	return trigger_turn and aux.CanActivateSkill(tp)
 end
