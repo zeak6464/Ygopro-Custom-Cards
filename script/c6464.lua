@@ -24,7 +24,7 @@ function s.startup(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 	--Set up periodic challenge effect
 	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,tp)
