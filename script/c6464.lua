@@ -22,22 +22,15 @@ end
 function s.startup(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
-	
 	--Set up periodic challenge effect
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e1:SetCondition(s.condition)
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,tp)
-	
 	Debug.ShowHint("The Pegasus Ultimate Challenge has begun!")
 end
 
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	--Extra condition if needed
-	return trigger_turn and aux.CanActivateSkill(tp)
-end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
