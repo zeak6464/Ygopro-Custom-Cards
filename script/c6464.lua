@@ -5,30 +5,12 @@ local s,id=GetID()
 --end
 --function s.init(c)
 function s.initial_effect(c)
-	--Skill
-	aux.AddSkillProcedure(c,1,false)
-	
-	--Activate automatically at start of duel
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_STARTUP)
+	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
-	e1:SetRange(0xff)
-	e1:SetOperation(s.startup)
-	c:RegisterEffect(e1)
-end
-
-
-function s.startup(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
-	Duel.Hint(HINT_CARD,tp,id)
-	--Set up periodic challenge effect
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetOperation(s.operation)
-	Duel.RegisterEffect(e1,tp)
-	Debug.ShowHint("The Pegasus Ultimate Challenge has begun!")
+	Duel.RegisterEffect(e1,0)
 end
 
 
