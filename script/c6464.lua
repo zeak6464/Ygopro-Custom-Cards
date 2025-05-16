@@ -25,7 +25,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	s.turn_counter=s.turn_counter+1
 	--Apply rule changes every 2-3 turns
-	return s.turn_counter%Duel.GetRandomNumber(2,3)==0
+	return s.turn_counter%Duel.GetRandomNumber(tp,2,3)==0
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -39,18 +39,13 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		"Kaiba-boy would hate this one!",
 		"Hmm, let me think... ah, perfect!"
 	}
-	local idx=Duel.GetRandomNumber(1,#announce)
+	local idx=Duel.GetRandomNumber(tp,1,#announce)
 	
 	Debug.ShowHint(announce[idx])
 	Duel.Hint(HINT_MESSAGE,tp,HINTMSG_ANNOUNCE)
 	
-	--Get a random rule (fixed function)
-	local dice=0
-	if Duel.IsMainPhase() then
-		dice=Duel.GetRandomNumber(1,40)
-	else
-		dice=math.random(1,40)
-	end
+	--Get a random rule
+	local dice=Duel.GetRandomNumber(tp,1,40)
 	
 	if dice==1 then
 		Debug.ShowHint("All players reveal the top card of their deck. You may play that card immediately, starting with the turn player.")
