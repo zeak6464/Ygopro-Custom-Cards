@@ -223,7 +223,7 @@ if not BuddyfightDuel then
 		-- Item card handling (replaces equipment)
 		local e1=Effect.GlobalEffect()
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_CHAIN_RESOLVED)
+		e1:SetCode(EVENT_CHAIN_SOLVED)
 		e1:SetOperation(BuddyfightDuel.itemop)
 		Duel.RegisterEffect(e1,0)
 	end
