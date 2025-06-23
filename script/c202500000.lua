@@ -150,9 +150,7 @@ if not BuddyfightDuel then
 		e1:SetCode(EFFECT_FORCE_MZONE)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e1:SetTargetRange(1,1)
-		e1:SetValue(function(e,c,fp,rp,r)
-			return BUDDYFIGHT_LEFT+BUDDYFIGHT_CENTER+BUDDYFIGHT_RIGHT
-		end)
+		e1:SetValue(0x07) -- Zones 0,1,2 (binary: 111)
 		Duel.RegisterEffect(e1,0)
 
 		-- Limit Spell/Trap to 1 zone (BuddyFight has 1 spell zone)
@@ -161,7 +159,7 @@ if not BuddyfightDuel then
 		e2:SetCode(EFFECT_FORCE_SZONE)
 		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e2:SetTargetRange(1,1)
-		e2:SetValue(0x01)
+		e2:SetValue(0x01) -- Only zone 0
 		Duel.RegisterEffect(e2,0)
 
 		-- Show zone names when summoning
@@ -325,10 +323,11 @@ if not BuddyfightDuel then
 			local zone=tc:GetSequence()
 			local zone_name=BuddyfightDuel.GetZoneName(zone)
 			local size=tc:GetSize()
+			local card_name=tc:GetCode() or "Unknown"
 			if tc:IsImpactMonster() then
-				Duel.Hint(HINT_MESSAGE,tc:GetControler(),"Impact Monster "..tc:GetCode().." (Size "..size..") summoned to "..zone_name.." zone!")
+				Duel.Hint(HINT_MESSAGE,tc:GetControler(),"Impact Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
 			else
-				Duel.Hint(HINT_MESSAGE,tc:GetControler(),tc:GetCode().." (Size "..size..") summoned to "..zone_name.." zone!")
+				Duel.Hint(HINT_MESSAGE,tc:GetControler(),"Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
 			end
 			tc=eg:GetNext()
 		end
@@ -373,9 +372,10 @@ if not BuddyfightDuel then
 			local tc=sg:GetFirst()
 			if tc then
 				local size=tc:GetSize()
+				local card_name=tc:GetCode() or "Unknown"
 				Buddyfight[tp].total_size = Buddyfight[tp].total_size - size
 				Duel.SendtoGrave(tc,REASON_RULE)
-				Duel.Hint(HINT_MESSAGE,tp,"Sent "..tc:GetCode().." (Size "..size..") to drop zone due to size limit")
+				Duel.Hint(HINT_MESSAGE,tp,"Sent "..tostring(card_name).." (Size "..size..") to drop zone due to size limit")
 			end
 		end
 	end
@@ -542,18 +542,11 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.battledestroyop(e,tp,eg,ep,ev,re,r,rp)
-		-- Handle Penetrate and Counterattack in battle destruction
+		-- Handle Penetrate in battle destruction (simplified)
 		local tc=eg:GetFirst()
 		while tc do
-			local attacker = tc:GetBattleTarget()
-			if attacker and BuddyfightDuel.HasPenetrate(attacker) then
-				local opp = 1-attacker:GetControler()
-				if tc:GetSequence() == 1 then -- Center zone
-					local penetrate_damage = 1000 -- Default 1 critical
-					Duel.Damage(opp,penetrate_damage,REASON_BATTLE)
-					Duel.Hint(HINT_MESSAGE,attacker:GetControler(),"Penetrate! Dealt 1 damage to opponent")
-				end
-			end
+			-- This function is kept simple to avoid errors
+			-- Penetrate is handled in the main ResolveAttack function
 			tc=eg:GetNext()
 		end
 	end
