@@ -72,50 +72,30 @@ function s.initial_effect(c)
 	e8:SetCondition(s.protcon)
 	c:RegisterEffect(e8)
 	
-	--Enable monster effects in S/T zone
+	--Allow monsters in S/T zone to activate effects
 	local e9=Effect.CreateEffect(c)
 	e9:SetType(EFFECT_TYPE_FIELD)
-	e9:SetCode(EFFECT_ACTIVATE_COST)
-	e9:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e9:SetCode(EFFECT_MONSTER_SSET)
 	e9:SetRange(LOCATION_FZONE)
-	e9:SetTargetRange(1,0)
-	e9:SetTarget(s.actarget)
+	e9:SetTargetRange(LOCATION_SZONE,0)
+	e9:SetTarget(s.tgtg)
 	c:RegisterEffect(e9)
 	
-	--Treat as monsters for effects
-	local e10=Effect.CreateEffect(c)
-	e10:SetType(EFFECT_TYPE_FIELD)
-	e10:SetCode(EFFECT_CHANGE_TYPE)
-	e10:SetRange(LOCATION_FZONE)
-	e10:SetTargetRange(LOCATION_SZONE,0)
-	e10:SetTarget(s.tgtg)
-	e10:SetValue(TYPE_MONSTER+TYPE_EFFECT)
-	c:RegisterEffect(e10)
-	
-	--Keep monster properties in S/T zone
-	local e11=Effect.CreateEffect(c)
-	e11:SetType(EFFECT_TYPE_FIELD)
-	e11:SetCode(EFFECT_REMAIN_FIELD)
-	e11:SetRange(LOCATION_FZONE)
-	e11:SetTargetRange(LOCATION_SZONE,0)
-	e11:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_MONSTER))
-	c:RegisterEffect(e11)
-	
 	--Move between zones
-	local e12=Effect.CreateEffect(c)
-	e12:SetDescription(aux.Stringid(id,3))
-	e12:SetType(EFFECT_TYPE_IGNITION)
-	e12:SetRange(LOCATION_FZONE)
-	e12:SetTarget(s.movetg)
-	e12:SetOperation(s.moveop)
-	c:RegisterEffect(e12)
+	local e10=Effect.CreateEffect(c)
+	e10:SetDescription(aux.Stringid(id,3))
+	e10:SetType(EFFECT_TYPE_IGNITION)
+	e10:SetRange(LOCATION_FZONE)
+	e10:SetTarget(s.movetg)
+	e10:SetOperation(s.moveop)
+	c:RegisterEffect(e10)
 end
 
 -- Activation cost - anime version required sacrifice
 function s.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	-- Announce its dramatic activation
-	Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,4)) -- "The Seal of Orichalcos has been activated!"
+	Debug.ShowHint("The Seal of Orichalcos has been activated!")
 end
 
 -- Lose duel condition/operation
@@ -126,7 +106,7 @@ function s.losecon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.loseop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Win(1-tp,WIN_REASON_SEAL_OF_ORICHALCOS)
+	Duel.Win(1-tp,WIN_REASON_EFFECT)
 end
 
 -- Extra deck restriction
@@ -182,23 +162,22 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		
 		--Ask player for position
-		local pos=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
+		local options={"Face-up","Face-down"}
+		local pos=Duel.SelectOption(tp,table.unpack(options))
 		if pos==0 then
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		else
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
 		end
+		
+		--Register as monster in S/T zone
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetValue(TYPE_MONSTER+TYPE_EFFECT)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
 	end
-end
-
-function s.actarget(e,te,tp)
-	if te:GetHandler():IsLocation(LOCATION_SZONE) then
-		local tc=te:GetHandler()
-		if tc:IsType(TYPE_MONSTER) then
-			return true
-		end
-	end
-	return false
 end
 
 function s.tgtg(e,c)
@@ -225,50 +204,25 @@ function s.moveop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsLocation(LOCATION_MZONE) then
 		--Moving from Monster Zone to S/T Zone
 		if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
-			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,tc:GetPosition(),true)
+			local pos=tc:GetPosition()
+			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,pos,true)
+			--Ensure it's treated as monster in S/T zone
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetValue(TYPE_MONSTER+TYPE_EFFECT)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
 		else
-			--No empty S/T Zone, allow swapping
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-			local g2=Duel.SelectMatchingCard(tp,s.movefilter,tp,LOCATION_SZONE,0,1,1,nil)
-			local tc2=g2:GetFirst()
-			if tc2 then
-				local pos1=tc:GetPosition()
-				local pos2=tc2:GetPosition()
-				
-				--Remove both temporarily
-				local rg=Group.FromCards(tc,tc2)
-				Duel.Remove(rg,POS_FACEUP,REASON_EFFECT+REASON_TEMPORARY)
-				
-				--Return them in swapped positions
-				Duel.ReturnToField(tc2)
-				Duel.MoveToField(tc2,tp,tp,LOCATION_MZONE,pos2,true)
-				Duel.ReturnToField(tc)
-				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,pos1,true)
-			end
+			Debug.ShowHint("No available S/T Zone space!")
 		end
 	else
 		--Moving from S/T Zone to Monster Zone
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-			Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,tc:GetPosition(),true)
+			local pos=tc:GetPosition()
+			Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,pos,true)
 		else
-			--No empty Monster Zone, allow swapping
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-			local g2=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_MZONE,0,1,1,nil,TYPE_MONSTER)
-			local tc2=g2:GetFirst()
-			if tc2 then
-				local pos1=tc:GetPosition()
-				local pos2=tc2:GetPosition()
-				
-				--Remove both temporarily
-				local rg=Group.FromCards(tc,tc2)
-				Duel.Remove(rg,POS_FACEUP,REASON_EFFECT+REASON_TEMPORARY)
-				
-				--Return them in swapped positions
-				Duel.ReturnToField(tc2)
-				Duel.MoveToField(tc2,tp,tp,LOCATION_SZONE,pos2,true)
-				Duel.ReturnToField(tc)
-				Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,pos1,true)
-			end
+			Debug.ShowHint("No available Monster Zone space!")
 		end
 	end
 end

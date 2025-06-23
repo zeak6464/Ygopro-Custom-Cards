@@ -10,8 +10,22 @@ function s.initial_effect(c)
 	Debug.ShowHint("Greetings Duelists!")
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,0)
+	
+	--Register destruction tracking
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetOperation(s.regop)
+	Duel.RegisterEffect(e2,0)
 end
 
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	for tc in aux.Next(eg) do
+		if tc:IsPreviousLocation(LOCATION_ONFIELD) then
+			Duel.RegisterFlagEffect(tc:GetPreviousControler(),id,RESET_PHASE+PHASE_END,0,1)
+		end
+	end
+end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
@@ -30,7 +44,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	--Get a random rule, but not the same as last time
 	local dice=0
 	repeat
-		dice=Duel.GetRandomNumber(1,40)
+		dice=Duel.GetRandomNumber(1,45)
 	until dice~=s.last_rule
 	
 	s.last_rule=dice
@@ -51,13 +65,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif dice==2 then
-		Debug.ShowHint("Both players play with their hands revealed.")
+		Debug.ShowHint("Both players play with their hands revealed for 2 turns.")
 		Duel.ConfirmCards(tp,Duel.GetFieldGroup(tp,0,LOCATION_HAND))
 		Duel.ConfirmCards(1-tp,Duel.GetFieldGroup(1-tp,0,LOCATION_HAND))
-		--This effect is temporary in EDOPro since we can't make it permanent
+		--Create continuous effect to reveal hands
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_TO_HAND)
+		e1:SetOperation(s.revealop)
+		e1:SetReset(RESET_PHASE+PHASE_END,2)
+		Duel.RegisterEffect(e1,tp)
 	elseif dice==3 then
 		Debug.ShowHint("Destroy all monsters with five or more stars.")
-		local g=Duel.GetMatchingGroup(function(c) return c:GetLevel()>=5 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:GetLevel()>=5 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==4 then
 		Debug.ShowHint("Everyone discard a random card from their hand.")
@@ -70,8 +90,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(g2,REASON_DISCARD+REASON_EFFECT)
 		end
 	elseif dice==5 then
-		Debug.ShowHint("Everyone stop and introduce yourself to the person sitting on your right.")
-		Debug.ShowHint("Since this is EDOPro, just take a moment to appreciate your opponent's username!")
+		Debug.ShowHint("All monsters gain 500 ATK and DEF for appreciating your opponent!")
+		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		for tc in aux.Next(g) do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(500)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			tc:RegisterEffect(e2)
+		end
 	elseif dice==6 then
 		Debug.ShowHint("Lose 500 LP for each Spell and Trap Card you control.")
 		local ct1=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_ONFIELD,0,nil,TYPE_SPELL+TYPE_TRAP)
@@ -97,7 +128,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SetLP(1-tp,lp1)
 	elseif dice==9 then
 		Debug.ShowHint("Destroy all monsters with 1500 or less ATK.")
-		local g=Duel.GetMatchingGroup(function(c) return c:GetAttack()<=1500 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:GetAttack()<=1500 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==10 then
 		Debug.ShowHint("If you had a card destroyed this turn, you may destroy one of your opponent's cards.")
@@ -114,7 +145,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(g,REASON_EFFECT)
 		end
 	elseif dice==11 then
-		Debug.ShowHint("Players cannot activate Spell Cards. (They could activate their effects.)")
+		Debug.ShowHint("Players cannot activate Spell Cards for 2 turns.")
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -124,7 +155,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_PHASE+PHASE_END,2)
 		Duel.RegisterEffect(e1,tp)
 	elseif dice==12 then
-		Debug.ShowHint("Remove all cards in all graveyard from the game.")
+		Debug.ShowHint("Remove all cards in all graveyards from the game.")
 		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	elseif dice==13 then
@@ -138,18 +169,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
 	elseif dice==14 then
-		Debug.ShowHint("Turn your deck over and then draw from the new top of the deck.")
-		Debug.ShowHint("In EDOPro, we'll simulate this by drawing from the bottom of your deck.")
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 then
-			Duel.Draw(tp,1,REASON_EFFECT)
-		end
-		if Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>0 then
-			Duel.Draw(1-tp,1,REASON_EFFECT)
+		Debug.ShowHint("Draw from the bottom of your deck instead of the top!")
+		--Simulate by moving bottom card to top, then drawing
+		for p=tp,1-tp do
+			if Duel.GetFieldGroupCount(p,LOCATION_DECK,0)>0 then
+				local ct=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)
+				local g=Duel.GetDecktopGroup(p,ct)
+				local tc=g:GetFirst()
+				Duel.MoveSequence(tc,0)
+				Duel.Draw(p,1,REASON_EFFECT)
+			end
 		end
 	elseif dice==15 then
-		Debug.ShowHint("You cannot attack unless you say \"Yu-Gi-Oh!\"")
-		Debug.ShowHint("In EDOPro, we'll simulate this by limiting attacks for one turn.")
-		--Limit attacks for one turn
+		Debug.ShowHint("No attacks allowed this turn - take time to strategize!")
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_ATTACK)
@@ -188,25 +220,26 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==21 then
-	    Debug.ShowHint("Discard your hand and then draw that many cards.")
-	 local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+		Debug.ShowHint("Discard your hand and then draw that many cards.")
+		local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
 		local h2=Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)
-	 local g=Duel.GetFieldGroup(tp,LOCATION_HAND,LOCATION_HAND)
-	    Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
-	    Duel.BreakEffect()
-	    Duel.Draw(tp,h1,REASON_EFFECT)
-	    Duel.Draw(1-tp,h2,REASON_EFFECT)
+		local g1=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+		local g2=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
+		Duel.SendtoGrave(g1,REASON_EFFECT+REASON_DISCARD)
+		Duel.SendtoGrave(g2,REASON_EFFECT+REASON_DISCARD)
+		Duel.BreakEffect()
+		Duel.Draw(tp,h1,REASON_EFFECT)
+		Duel.Draw(1-tp,h2,REASON_EFFECT)
 	elseif dice==22 then
 		Debug.ShowHint("Everyone draw the bottom card of their Deck.")
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-			local g=Duel.GetDecktopGroup(tp,Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)):Select(tp,1,1,nil)
-			Duel.SendtoHand(g,tp,REASON_EFFECT)
-		end
-		if Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>0 then
-			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TODECK)
-			local g=Duel.GetDecktopGroup(1-tp,Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)):Select(1-tp,1,1,nil)
-			Duel.SendtoHand(g,1-tp,REASON_EFFECT)
+		for p=tp,1-tp do
+			if Duel.GetFieldGroupCount(p,LOCATION_DECK,0)>0 then
+				local ct=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)
+				local g=Duel.GetDecktopGroup(p,ct)
+				local tc=g:GetFirst()
+				Duel.SendtoHand(tc,p,REASON_EFFECT)
+				Duel.ConfirmCards(1-p,tc)
+			end
 		end
 	elseif dice==23 then
 		Debug.ShowHint("If you have less LP than your opponent, Special Summon one monster from your hand to the field, ignore all Summoning conditions.")
@@ -227,7 +260,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif dice==24 then
-		Debug.ShowHint("Players cannot activate Trap Cards. (They could activate their effects.)")
+		Debug.ShowHint("Players cannot activate Trap Cards for 2 turns.")
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -246,36 +279,44 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DiscardDeck(tp,math.min(15,Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)),REASON_EFFECT)
 		Duel.DiscardDeck(1-tp,math.min(15,Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)),REASON_EFFECT)
 	elseif dice==26 then
-		Debug.ShowHint("You must sing your Battle Phase.")
-		Debug.ShowHint("In EDOPro, feel free to sing along to your favorite Yu-Gi-Oh theme song!")
+		Debug.ShowHint("All monsters must attack if able this turn - the battle song compels them!")
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_MUST_ATTACK)
+		e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
 	elseif dice==27 then
 		Debug.ShowHint("Destroy all Continuous Spell and Trap Cards.")
 		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and (c:IsType(TYPE_CONTINUOUS)) end,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==28 then
 		Debug.ShowHint("Destroy all monsters with 1500 or more ATK.")
-		local g=Duel.GetMatchingGroup(function(c) return c:GetAttack()>=1500 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:GetAttack()>=1500 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==29 then
 		Debug.ShowHint("Destroy all monsters with 4 or less Levels.")
-		local g=Duel.GetMatchingGroup(function(c) return c:GetLevel()<=4 and c:GetLevel()>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:GetLevel()<=4 and c:GetLevel()>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif dice==30 then
 		Debug.ShowHint("No monsters can be face-down, flip all face-down monsters to face up and their flip effects are negated.")
 		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-		Duel.ChangePosition(g,POS_FACEUP_ATTACK)
-		for tc in aux.Next(g) do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
-			tc:RegisterEffect(e1)
+		if #g>0 then
+			Duel.ChangePosition(g,POS_FACEUP_ATTACK)
+			for tc in aux.Next(g) do
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_DISABLE)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+				tc:RegisterEffect(e1)
+			end
 		end
 	elseif dice==31 then
-		Debug.ShowHint("Shuffle your Side Deck and then draw from that instead of your Main Deck.")
-		Debug.ShowHint("In EDOPro, we can't access the Side Deck, so let's draw from our Main Deck instead!")
-		Duel.Draw(tp,1,REASON_EFFECT)
-		Duel.Draw(1-tp,1,REASON_EFFECT)
+		Debug.ShowHint("Randomize your deck order and draw 3 cards!")
+		for p=tp,1-tp do
+			Duel.ShuffleDeck(p)
+			Duel.Draw(p,3,REASON_EFFECT)
+		end
 	elseif dice==32 then
 		Debug.ShowHint("Swap monsters with your opponent. All of them.")
 		local g1=Duel.GetMatchingGroup(Card.IsAbleToChangeControler,tp,LOCATION_MZONE,0,nil)
@@ -288,7 +329,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	elseif dice==34 then
-		Debug.ShowHint("You can only activate cards on your turn.")
+		Debug.ShowHint("You can only activate cards on your turn for 2 turns.")
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -298,7 +339,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_PHASE+PHASE_END,2)
 		Duel.RegisterEffect(e1,tp)
 	elseif dice==35 then
-		Debug.ShowHint("You can only play monsters with an ATK of 1600 or higher.")
+		Debug.ShowHint("You can only play monsters with an ATK of 1600 or higher for 2 turns.")
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_SUMMON)
@@ -352,9 +393,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif dice==39 then
-		Debug.ShowHint("Each duelist may draw up to two cards, but loses 1000 Life Points for each card he or she chooses to draw.")
+		Debug.ShowHint("Each duelist may draw up to two cards, but loses 1000 Life Points for each card drawn.")
 		for p=tp,1-tp do
-			local opt=Duel.SelectOption(p,aux.Stringid(id,1),aux.Stringid(id,2),aux.Stringid(id,3))
+			local options={"Draw 0 cards","Draw 1 card (-1000 LP)","Draw 2 cards (-2000 LP)"}
+			local opt=Duel.SelectOption(p,table.unpack(options))
 			if opt>=1 then
 				Duel.Draw(p,1,REASON_EFFECT)
 				Duel.Damage(p,1000,REASON_EFFECT)
@@ -364,10 +406,67 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Damage(p,1000,REASON_EFFECT)
 			end
 		end
-	else --40
-	    Debug.ShowHint("Make All Players Life Points 50% of what they are now.")
+	elseif dice==40 then
+		Debug.ShowHint("Make All Players Life Points 50% of what they are now.")
 		Duel.SetLP(tp,math.ceil(Duel.GetLP(tp)/2))
 		Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
+	elseif dice==41 then
+		Debug.ShowHint("All monsters gain ATK equal to their Level x 200!")
+		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		for tc in aux.Next(g) do
+			local lv=tc:GetLevel()
+			if lv>0 then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_UPDATE_ATTACK)
+				e1:SetValue(lv*200)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+				tc:RegisterEffect(e1)
+			end
+		end
+	elseif dice==42 then
+		Debug.ShowHint("All players must tribute a monster to draw 2 cards!")
+		for p=tp,1-tp do
+			local g=Duel.GetMatchingGroup(aux.TRUE,p,LOCATION_MZONE,0,nil)
+			if #g>0 then
+				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TRIBUTE)
+				local sg=g:Select(p,1,1,nil)
+				Duel.Release(sg,REASON_EFFECT)
+				Duel.Draw(p,2,REASON_EFFECT)
+			end
+		end
+	elseif dice==43 then
+		Debug.ShowHint("Randomly redistribute all monsters on the field to different players!")
+		local g=Duel.GetMatchingGroup(Card.IsAbleToChangeControler,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if #g>0 then
+			for tc in aux.Next(g) do
+				local newcontroller=Duel.GetRandomNumber(0,1)
+				if tc:GetControler()~=newcontroller then
+					Duel.GetControl(tc,newcontroller)
+				end
+			end
+		end
+	elseif dice==44 then
+		Debug.ShowHint("All Spell/Trap cards become Quick-Play for 2 turns!")
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
+		e1:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
+		e1:SetTarget(function(e,c) return c:IsType(TYPE_SPELL+TYPE_TRAP) end)
+		e1:SetReset(RESET_PHASE+PHASE_END,2)
+		Duel.RegisterEffect(e1,tp)
+	else --45
+		Debug.ShowHint("Mirror Force effect! All Attack Position monsters are destroyed!")
+		local g=Duel.GetMatchingGroup(function(c) return c:IsAttackPos() end,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		Duel.Destroy(g,REASON_EFFECT)
+	end
+end
+
+function s.revealop(e,tp,eg,ep,ev,re,r,rp)
+	for tc in aux.Next(eg) do
+		if tc:IsLocation(LOCATION_HAND) then
+			Duel.ConfirmCards(1-tc:GetControler(),tc)
+		end
 	end
 end
 
@@ -386,8 +485,4 @@ end
 
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return c:IsAttackBelow(1599)
-end
-
-function s.halfval(e,c)
-	return math.floor(c:GetBaseAttack()/2)
 end
