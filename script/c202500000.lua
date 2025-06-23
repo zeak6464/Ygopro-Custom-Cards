@@ -115,8 +115,7 @@ if not BuddyfightDuel then
 		Buddyfight[0]={gauge=2, buddy_called=false, flag_set=false, buddy_monster=nil, item_equipped=nil, impact_used=false, counter_ready=false, total_size=0}
 		Buddyfight[1]={gauge=2, buddy_called=false, flag_set=false, buddy_monster=nil, item_equipped=nil, impact_used=false, counter_ready=false, total_size=0}
 		
-		Duel.Hint(HINT_MESSAGE,0,"BuddyFight Duel System Activated!")
-		Duel.Hint(HINT_MESSAGE,1,"BuddyFight Duel System Activated!")
+		Debug.Message("BuddyFight Duel System Activated!")
 	end
 
 	function BuddyfightDuel.setupop(e,tp,eg,ep,ev,re,r,rp)
@@ -128,8 +127,8 @@ if not BuddyfightDuel then
 		Duel.Draw(0,1,REASON_RULE)
 		Duel.Draw(1,1,REASON_RULE)
 		
-		Duel.Hint(HINT_MESSAGE,0,"BuddyFight Setup Complete: 10 Life, 6 cards, 2 gauge")
-		Duel.Hint(HINT_MESSAGE,1,"BuddyFight Setup Complete: 10 Life, 6 cards, 2 gauge")
+		-- Use Debug.Message for string messages
+		Debug.Message("BuddyFight Setup Complete: 10 Life, 6 cards, 2 gauge")
 	end
 
 	function BuddyfightDuel.RegisterCustomPhases()
@@ -325,9 +324,9 @@ if not BuddyfightDuel then
 			local size=tc:GetSize()
 			local card_name=tc:GetCode() or "Unknown"
 			if tc:IsImpactMonster() then
-				Duel.Hint(HINT_MESSAGE,tc:GetControler(),"Impact Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
+				Debug.Message("Impact Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
 			else
-				Duel.Hint(HINT_MESSAGE,tc:GetControler(),"Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
+				Debug.Message("Monster "..tostring(card_name).." (Size "..size..") summoned to "..zone_name.." zone!")
 			end
 			tc=eg:GetNext()
 		end
@@ -343,7 +342,7 @@ if not BuddyfightDuel then
 				
 				-- Check if total size exceeds 3
 				if Buddyfight[tp].total_size > 3 then
-					Duel.Hint(HINT_MESSAGE,tp,"Total size exceeds 3! Choose monsters to send to drop zone.")
+					Debug.Message("Total size exceeds 3! Choose monsters to send to drop zone.")
 					BuddyfightDuel.HandleSizeOverflow(tp)
 				end
 			end
@@ -375,7 +374,7 @@ if not BuddyfightDuel then
 				local card_name=tc:GetCode() or "Unknown"
 				Buddyfight[tp].total_size = Buddyfight[tp].total_size - size
 				Duel.SendtoGrave(tc,REASON_RULE)
-				Duel.Hint(HINT_MESSAGE,tp,"Sent "..tostring(card_name).." (Size "..size..") to drop zone due to size limit")
+				Debug.Message("Sent "..tostring(card_name).." (Size "..size..") to drop zone due to size limit")
 			end
 		end
 	end
@@ -390,7 +389,7 @@ if not BuddyfightDuel then
 					Duel.SendtoGrave(g,REASON_EFFECT)
 					Buddyfight[p].gauge = Buddyfight[p].gauge + 1
 					Duel.Draw(p,1,REASON_EFFECT)
-					Duel.Hint(HINT_MESSAGE,p,"Charged +1 Gauge! (Start Phase)")
+					Debug.Message("Charged +1 Gauge! (Start Phase)")
 				end
 			end
 		end
@@ -424,10 +423,10 @@ if not BuddyfightDuel then
 				-- Only 1 item can be equipped at a time
 				if Buddyfight[tp].item_equipped then
 					Duel.SendtoGrave(Buddyfight[tp].item_equipped,REASON_RULE)
-					Duel.Hint(HINT_MESSAGE,tp,"Previous item sent to drop zone")
+					Debug.Message("Previous item sent to drop zone")
 				end
 				Buddyfight[tp].item_equipped = rc
-				Duel.Hint(HINT_MESSAGE,tp,"Item equipped to fighter!")
+				Debug.Message("Item equipped to fighter!")
 			end
 		end
 	end
@@ -438,11 +437,11 @@ if not BuddyfightDuel then
 			local tp=tc:GetControler()
 			if Buddyfight[tp] then
 				if Buddyfight[tp].flag_set then
-					Duel.Hint(HINT_MESSAGE,tp,"Flag already set this duel!")
+					Debug.Message("Flag already set this duel!")
 					Duel.SendtoHand(tc,nil,REASON_RULE)
 				else
 					Buddyfight[tp].flag_set = true
-					Duel.Hint(HINT_MESSAGE,tp,"Flag set!")
+					Debug.Message("Flag set!")
 				end
 			end
 		end
@@ -460,7 +459,7 @@ if not BuddyfightDuel then
 			if tc:IsImpactMonster() and Buddyfight and Buddyfight[tc:GetControler()] then
 				local tp=tc:GetControler()
 				Buddyfight[tp].impact_used = true
-				Duel.Hint(HINT_MESSAGE,tp,"Impact Monster summoned! (Final Phase only)")
+				Debug.Message("Impact Monster summoned! (Final Phase only)")
 			end
 			tc=eg:GetNext()
 		end
@@ -485,7 +484,7 @@ if not BuddyfightDuel then
 			local opp=1-at:GetControler()
 			if Buddyfight[opp] and Duel.IsExistingMatchingCard(Card.IsCounterCard,opp,LOCATION_HAND,0,1,nil) then
 				Buddyfight[opp].counter_ready = true
-				Duel.Hint(HINT_MESSAGE,opp,"Counter opportunity available!")
+				Debug.Message("Counter opportunity available!")
 			end
 		end
 	end
@@ -493,7 +492,7 @@ if not BuddyfightDuel then
 	function BuddyfightDuel.dropzoneop(e,tp,eg,ep,ev,re,r,rp)
 		for tc in aux.Next(eg) do
 			if tc:IsMonster() or tc:IsSpell() or tc:IsTrap() then
-				Duel.Hint(HINT_MESSAGE,tc:GetPreviousControler(),"Card sent to Drop Zone")
+				Debug.Message("Card sent to Drop Zone")
 			end
 		end
 	end
@@ -505,7 +504,7 @@ if not BuddyfightDuel then
 				local item_status = Buddyfight[p].item_equipped and "Equipped" or "None"
 				local impact_status = Buddyfight[p].impact_used and "Used" or "Ready"
 				local counter_status = Buddyfight[p].counter_ready and "Ready" or "Not Ready"
-				Duel.Hint(HINT_MESSAGE,p,"Gauge: "..Buddyfight[p].gauge.." | Size: "..Buddyfight[p].total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
+				Debug.Message("Gauge: "..Buddyfight[p].gauge.." | Size: "..Buddyfight[p].total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
 			end
 		end
 	end
@@ -537,7 +536,7 @@ if not BuddyfightDuel then
 			local attacker_critical = 1 -- Default critical
 			local damage = attacker_critical * 1000
 			Duel.ChangeBattleDamage(1-a:GetControler(), damage)
-			Duel.Hint(HINT_MESSAGE,a:GetControler(),"Direct attack! Dealt "..attacker_critical.." damage")
+			Debug.Message("Direct attack! Dealt "..attacker_critical.." damage")
 		end
 	end
 
@@ -576,10 +575,10 @@ if not BuddyfightDuel then
 			Buddyfight[tp].buddy_monster = c
 			Buddyfight[tp].gauge = Buddyfight[tp].gauge - 2
 			Duel.Recover(tp,1000,REASON_EFFECT) -- Buddy Gift: +1 Life (1000 LP)
-			Duel.Hint(HINT_MESSAGE,tp,"Buddy Call! +1 Life (Buddy Gift), -2 Gauge")
+			Debug.Message("Buddy Call! +1 Life (Buddy Gift), -2 Gauge")
 			return true
 		else
-			Duel.Hint(HINT_MESSAGE,tp,"Cannot Buddy Call: Already called or insufficient gauge.")
+			Debug.Message("Cannot Buddy Call: Already called or insufficient gauge.")
 			return false
 		end
 	end
@@ -643,7 +642,7 @@ if not BuddyfightDuel then
 			BuddyfightDuel.ResolveAttack(link_attacker, nil, combined_power, combined_critical, min_defense)
 		end
 		
-		Duel.Hint(HINT_MESSAGE,tp,"Link Attack! Combined Power: "..combined_power..", Combined Critical: "..combined_critical)
+		Debug.Message("Link Attack! Combined Power: "..combined_power..", Combined Critical: "..combined_critical)
 	end
 
 	-- Constants
@@ -658,35 +657,35 @@ if not BuddyfightDuel then
 			-- 3.1.1: Attack hits monster - compare power vs defense
 			local target_defense = target:GetDefense()
 			if attacker_power >= target_defense then
-				Duel.Hint(HINT_MESSAGE,tp,"Attack hits! "..attacker_power.." power >= "..target_defense.." defense")
+				Debug.Message("Attack hits! "..attacker_power.." power >= "..target_defense.." defense")
 				Duel.Destroy(target,REASON_BATTLE)
 				
 				-- 3.2.1: Check for Penetrate ability
 				if BuddyfightDuel.HasPenetrate(attacker) and target:GetSequence() == 1 then -- Center zone
 					local penetrate_damage = attacker_critical * 1000 -- Convert to LP
 					Duel.Damage(opp,penetrate_damage,REASON_BATTLE)
-					Duel.Hint(HINT_MESSAGE,tp,"Penetrate! Dealt "..attacker_critical.." damage to opponent")
+					Debug.Message("Penetrate! Dealt "..attacker_critical.." damage to opponent")
 				end
 				
 				-- 3.2.2: Check for Counterattack ability
 				if BuddyfightDuel.HasCounterattack(target) then
 					local target_power = target:GetAttack()
 					if target_power >= attacker_defense then
-						Duel.Hint(HINT_MESSAGE,opp,"Counterattack! "..target_power.." power >= "..attacker_defense.." defense")
+						Debug.Message("Counterattack! "..target_power.." power >= "..attacker_defense.." defense")
 						Duel.Destroy(attacker,REASON_BATTLE)
 					end
 				end
 				
 				return true
 			else
-				Duel.Hint(HINT_MESSAGE,tp,"Attack fails! "..attacker_power.." power < "..target_defense.." defense")
+				Debug.Message("Attack fails! "..attacker_power.." power < "..target_defense.." defense")
 				return false
 			end
 		else
 			-- 3.1.2: Attack hits fighter directly - deal critical damage
 			local damage = attacker_critical * 1000 -- Convert to LP (1000 LP = 1 Life)
 			Duel.Damage(opp,damage,REASON_BATTLE)
-			Duel.Hint(HINT_MESSAGE,tp,"Direct attack! Dealt "..attacker_critical.." damage (critical)")
+			Debug.Message("Direct attack! Dealt "..attacker_critical.." damage (critical)")
 			return true
 		end
 	end
@@ -718,7 +717,7 @@ if not BuddyfightDuel then
 		-- Only 1 item can be equipped at a time
 		if Buddyfight[tp].item_equipped then
 			Duel.SendtoGrave(Buddyfight[tp].item_equipped,REASON_RULE)
-			Duel.Hint(HINT_MESSAGE,tp,"Previous item sent to drop zone")
+			Debug.Message("Previous item sent to drop zone")
 		end
 		
 		Buddyfight[tp].item_equipped = item
