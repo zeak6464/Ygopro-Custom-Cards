@@ -155,10 +155,10 @@ if not BuddyfightDuel then
 		-- Limit Spell/Trap to 1 zone (BuddyFight has 1 spell zone)
 		local e2=Effect.GlobalEffect()
 		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetCode(EFFECT_FORCE_SZONE)
+		e2:SetCode(EFFECT_MAX_SZONE)
 		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e2:SetTargetRange(1,1)
-		e2:SetValue(0x01) -- Only zone 0
+		e2:SetValue(1) -- Only 1 spell zone
 		Duel.RegisterEffect(e2,0)
 
 		-- Show zone names when summoning
