@@ -91,13 +91,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.gaugecheck(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local gauge = c:GetCounter(COUNTER_GAUGE)
-    -- Update field display with current gauge (visual feedback)
-    if gauge ~= (c.last_gauge or 0) then
-        c.last_gauge = gauge
-        -- Visual gauge update happens automatically via counters
-    end
+    -- Simplified gauge check - just let counters display naturally
+    -- No need to track changes manually
 end
 
 function s.dircon(e)

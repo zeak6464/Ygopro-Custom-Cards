@@ -132,6 +132,11 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.setupop(e,tp,eg,ep,ev,re,r,rp)
+		-- Ensure Buddyfight table exists
+		if not Buddyfight then
+			Buddyfight = {}
+		end
+		
 		-- BuddyFight setup: 10 Life (use LP directly!)
 		Duel.SetLP(0,10)
 		Duel.SetLP(1,10)
@@ -524,7 +529,8 @@ if not BuddyfightDuel then
 				local item_status = Buddyfight[p].item_equipped and "Equipped" or "None"
 				local impact_status = Buddyfight[p].impact_used and "Used" or "Ready"
 				local counter_status = Buddyfight[p].counter_ready and "Ready" or "Not Ready"
-				Debug.Message("Player "..p.." | Gauge: "..gauge.." | Size: "..Buddyfight[p].total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
+				local total_size = Buddyfight[p].total_size or 0
+				Debug.Message("Player "..p.." | Gauge: "..gauge.." | Size: "..total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
 			end
 		end
 	end
@@ -604,15 +610,13 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.PayGauge(tp, cost)
-		if Buddyfight and Buddyfight[tp] and Buddyfight[tp].gauge >= cost then
-			Buddyfight[tp].gauge = Buddyfight[tp].gauge - cost
-			return true
-		end
-		return false
+		-- Redirect to new gauge system
+		return BuddyfightDuel.PayGaugeNew(tp, cost)
 	end
 
 	function BuddyfightDuel.CanCastSpell(tp, cost)
-		return Buddyfight and Buddyfight[tp] and Buddyfight[tp].gauge >= cost
+		-- Redirect to new gauge system
+		return BuddyfightDuel.CanCastSpellNew(tp, cost)
 	end
 
 	function BuddyfightDuel.CanCastImpact(tp, cost)
@@ -777,7 +781,8 @@ if not BuddyfightDuel then
 			local tc=g:Select(tp,1,1,nil):GetFirst()
 			if tc then
 				-- Remove from deck
-				Duel.SendtoRemoved(tc,POS_FACEDOWN,REASON_RULE)
+				Duel.SendtoHand(tc,nil,REASON_RULE)
+				Duel.SendtoRemoved(tc,nil,REASON_RULE)
 				
 				-- Place in Spell Zone as face-up Spell Card (Buddy Zone)
 				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
@@ -845,7 +850,7 @@ if not BuddyfightDuel then
 		-- Pay gauge from Field Spell
 		if BuddyfightDuel.GetGauge(tp) >= cost then
 			if Buddyfight[tp].field_spell then
-				Buddyfight[tp].field_spell:RemoveCounter(tp, COUNTER_GAUGE, cost)
+				Buddyfight[tp].field_spell:RemoveCounter(COUNTER_GAUGE, cost)
 				local remaining = Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
 				Debug.Message("Player "..tp.." paid "..cost.." gauge (remaining: "..remaining..")")
 			elseif Buddyfight[tp].gauge then
