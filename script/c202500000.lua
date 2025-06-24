@@ -132,9 +132,32 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.setupop(e,tp,eg,ep,ev,re,r,rp)
+		-- Only run setup once per duel
+		if BuddyfightDuel.setup_complete then
+			return
+		end
+		BuddyfightDuel.setup_complete = true
+		
 		-- Ensure Buddyfight table exists
 		if not Buddyfight then
 			Buddyfight = {}
+		end
+		
+		-- Initialize player data tables
+		for tp=0,1 do
+			if not Buddyfight[tp] then
+				Buddyfight[tp] = {
+					gauge = 0,
+					buddy_called = false,
+					buddy_card = nil,
+					field_spell = nil,
+					total_size = 0,
+					item_equipped = nil,
+					impact_used = false,
+					counter_ready = false,
+					flag_set = false
+				}
+			end
 		end
 		
 		-- BuddyFight setup: 10 Life (use LP directly!)
@@ -407,11 +430,12 @@ if not BuddyfightDuel then
 		-- Charge & Draw can only be done during Start Phase (Draw Phase)
 		for p=0,1 do
 			if Buddyfight and Buddyfight[p] and Duel.SelectYesNo(p,"Charge 1 card to draw 1? (Start Phase only)") then
-				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
-				local g=Duel.SelectMatchingCard(p,nil,p,LOCATION_HAND,0,1,1,nil)
+				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
+				local g=Duel.SelectMatchingCard(p,Card.IsAbleToGrave,p,LOCATION_HAND,0,1,1,nil)
 				if #g>0 then
 					Duel.SendtoGrave(g,REASON_EFFECT)
-					Buddyfight[p].gauge = Buddyfight[p].gauge + 1
+					-- Add gauge using new system
+					BuddyfightDuel.AddGauge(p, 1)
 					Duel.Draw(p,1,REASON_EFFECT)
 					Debug.Message("Charged +1 Gauge! (Start Phase)")
 				end
@@ -752,6 +776,12 @@ if not BuddyfightDuel then
 
 	-- Field Spell Setup
 	function BuddyfightDuel.SetupFieldSpells()
+		-- Only setup once per duel
+		if BuddyfightDuel.field_spells_setup then
+			return
+		end
+		BuddyfightDuel.field_spells_setup = true
+		
 		-- Create and activate Dragon World Field Spell for both players
 		for tp=0,1 do
 			-- Ensure player data exists
@@ -759,18 +789,27 @@ if not BuddyfightDuel then
 				Buddyfight[tp] = {}
 			end
 			
-			local field_card = Duel.CreateToken(tp, 202500024)
-			if field_card then
-				Duel.MoveToField(field_card, tp, tp, LOCATION_FZONE, POS_FACEUP, true)
-				field_card:AddCounter(COUNTER_GAUGE, 2) -- Start with 2 gauge
-				Buddyfight[tp].field_spell = field_card
-				Debug.Message("Player "..tostring(tp).." Dragon World Field activated with 2 gauge")
+			-- Check if field spell already exists
+			if not Buddyfight[tp].field_spell then
+				local field_card = Duel.CreateToken(tp, 202500024)
+				if field_card then
+					Duel.MoveToField(field_card, tp, tp, LOCATION_FZONE, POS_FACEUP, true)
+					field_card:AddCounter(COUNTER_GAUGE, 2) -- Start with 2 gauge
+					Buddyfight[tp].field_spell = field_card
+					Debug.Message("Player "..tostring(tp).." Dragon World Field activated with 2 gauge")
+				end
 			end
 		end
 	end
 
 	-- Buddy Card Setup
 	function BuddyfightDuel.SetupBuddyCards()
+		-- Only setup once per duel
+		if BuddyfightDuel.buddy_cards_setup then
+			return
+		end
+		BuddyfightDuel.buddy_cards_setup = true
+		
 		-- Let each player choose their Buddy from deck
 		for tp=0,1 do
 			BuddyfightDuel.SelectBuddyFromDeck(tp)
@@ -842,13 +881,17 @@ if not BuddyfightDuel then
 
 	function BuddyfightDuel.GetGauge(tp)
 		-- Get current gauge from Field Spell
-		if Buddyfight[tp] and Buddyfight[tp].field_spell then
-			return Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
+		if Buddyfight and Buddyfight[tp] and Buddyfight[tp].field_spell then
+			local counter_gauge = Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
+			Debug.Message("Field Spell gauge for player "..tostring(tp)..": "..tostring(counter_gauge))
+			return counter_gauge
 		end
 		-- Fallback to variable if Field Spell not available
-		if Buddyfight[tp] and Buddyfight[tp].gauge then
+		if Buddyfight and Buddyfight[tp] and Buddyfight[tp].gauge then
+			Debug.Message("Fallback gauge for player "..tostring(tp)..": "..tostring(Buddyfight[tp].gauge))
 			return Buddyfight[tp].gauge
 		end
+		Debug.Message("No gauge found for player "..tostring(tp)..", returning 0")
 		return 0
 	end
 
@@ -885,7 +928,9 @@ if not BuddyfightDuel then
 
 	function BuddyfightDuel.CanCastSpellNew(tp, cost)
 		-- Check if player can cast spell (using new gauge system)
-		return BuddyfightDuel.GetGauge(tp) >= cost
+		local current_gauge = BuddyfightDuel.GetGauge(tp)
+		Debug.Message("Player "..tostring(tp).." checking gauge: has "..tostring(current_gauge)..", needs "..tostring(cost))
+		return current_gauge >= cost
 	end
 
 	-- Life System using Direct LP
