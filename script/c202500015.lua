@@ -2,9 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
     -- Mark as Dragon World monster (archetype set in database)
-    
-    -- Set monster size (Size 1)
-    c.buddyfight_size = 1
+    -- Size 1 monster (Level 4 = Size 1 in BuddyFight)
 
     -- Call cost for normal summoning
     local e0=Effect.CreateEffect(c)

@@ -2,9 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
     -- Mark as Buddy Monster (archetype set in database)
-    
-    -- Set monster size (Size 2 for buddy monsters)
-    c.buddyfight_size = 2
+    -- Size 2 monster (Level 6 = Size 2 in BuddyFight)
 
     -- Call cost for normal summoning
     local e0=Effect.CreateEffect(c)

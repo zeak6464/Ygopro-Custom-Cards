@@ -16,6 +16,16 @@ BUDDYFIGHT_CARDS = [
         'ot': 4, 'alias': 0, 'category': 0
     },
     {
+        'id': 202500025,
+        'name': 'BuddyFight Gauge Counter',
+        'desc': 'Token used to track gauge in BuddyFight duels. Counters on this card represent available gauge.',
+        'type': 0x4000000,  # Token
+        'atk': 0, 'def': 0, 'level': 1,
+        'race': 0, 'attribute': 0,
+        'setcode': 0x1000,  # BuddyFight system
+        'ot': 4, 'alias': 0, 'category': 0
+    },
+    {
         'id': 202500001,
         'name': 'BuddyFight Field Generator',
         'desc': 'Activates BuddyFight rules and restrictions. Required to start a BuddyFight duel.',
@@ -160,13 +170,13 @@ BUDDYFIGHT_CARDS = [
         'ot': 4, 'alias': 0, 'category': 0
     },
     
-    # Items
+    # Items (now proper Equip Spells)
     {
         'id': 202500021,
         'name': 'Dragonblade, Dragobrave',
-        'desc': 'A legendary Dragon World item. Grants +5000 ATK and counterattack abilities. Pay 3 gauge to equip.',
-        'type': 0x2,  # Spell
-        'atk': 0, 'def': 0, 'level': 0,
+        'desc': 'Equip only to a monster you control. Equipped monster gains 5000 ATK. When the equipped monster destroys an opponent monster by battle, inflict 1000 damage.',
+        'type': 0x40002,  # Equip Spell
+        'atk': 5000, 'def': 0, 'level': 0,  # ATK boost value
         'race': 0, 'attribute': 0,
         'setcode': 0x6000,  # BuddyFight Item
         'ot': 4, 'alias': 0, 'category': 0
@@ -174,9 +184,9 @@ BUDDYFIGHT_CARDS = [
     {
         'id': 202500022,
         'name': 'Dragonblade, Dragofearless',
-        'desc': 'A basic Dragon World item. Grants +3000 ATK. No equip cost - can be equipped for free.',
-        'type': 0x2,  # Spell
-        'atk': 0, 'def': 0, 'level': 0,
+        'desc': 'Equip only to a monster you control. Equipped monster gains 3000 ATK. This card can be equipped without paying gauge cost.',
+        'type': 0x40002,  # Equip Spell
+        'atk': 3000, 'def': 0, 'level': 0,  # ATK boost value
         'race': 0, 'attribute': 0,
         'setcode': 0x6000,  # BuddyFight Item
         'ot': 4, 'alias': 0, 'category': 0

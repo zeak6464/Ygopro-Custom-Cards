@@ -33,9 +33,15 @@ if not BuddyfightDuel then
 			   c:IsSetCard(0x3000) or c:IsSetCard(0x4000) -- Any BuddyFight card
 	end
 
-	-- Get monster size (default 1 if not specified)
+	-- Get monster size (uses YGO Level system - much simpler!)
 	function Card.GetSize(c)
-		return c.buddyfight_size or 1
+		-- Level 1 = Size 1, Level 2 = Size 2, etc.
+		-- Non-monsters default to Size 1
+		if c:IsType(TYPE_MONSTER) then
+			return c:GetLevel()
+		else
+			return 1
+		end
 	end
 
 	-- Zone constants for BuddyFight (Left, Center, Right)
@@ -43,11 +49,14 @@ if not BuddyfightDuel then
 	BUDDYFIGHT_CENTER = 0x02  -- Zone 1  
 	BUDDYFIGHT_RIGHT = 0x04   -- Zone 2
 
-	-- BuddyFight Phases
-	PHASE_BUDDYFIGHT_START = 0x100
-	PHASE_BUDDYFIGHT_MAIN = 0x200
-	PHASE_BUDDYFIGHT_ATTACK = 0x400
-	PHASE_BUDDYFIGHT_FINAL = 0x800
+	-- BuddyFight Phases (use built-in YGO phases)
+	PHASE_BUDDYFIGHT_START = PHASE_DRAW
+	PHASE_BUDDYFIGHT_MAIN = PHASE_MAIN1
+	PHASE_BUDDYFIGHT_ATTACK = PHASE_BATTLE
+	PHASE_BUDDYFIGHT_FINAL = PHASE_END
+
+	-- Gauge Counter Type
+	COUNTER_GAUGE = 0x1001
 
 	BuddyfightDuel={}
 
@@ -110,18 +119,22 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.initop(e,tp,eg,ep,ev,re,r,rp)
-		-- Initialize global BuddyFight data
+		-- Initialize global BuddyFight data (simplified)
 		Buddyfight = {}
-		Buddyfight[0]={gauge=2, buddy_called=false, flag_set=false, buddy_monster=nil, item_equipped=nil, impact_used=false, counter_ready=false, total_size=0}
-		Buddyfight[1]={gauge=2, buddy_called=false, flag_set=false, buddy_monster=nil, item_equipped=nil, impact_used=false, counter_ready=false, total_size=0}
+		Buddyfight[0]={buddy_called=false, flag_set=false, impact_used=false, total_size=0}
+		Buddyfight[1]={buddy_called=false, flag_set=false, impact_used=false, total_size=0}
+		
+		-- Create gauge counter tokens for both players
+		BuddyfightDuel.SetupGaugeSystem(0)
+		BuddyfightDuel.SetupGaugeSystem(1)
 		
 		Debug.Message("BuddyFight Duel System Activated!")
 	end
 
 	function BuddyfightDuel.setupop(e,tp,eg,ep,ev,re,r,rp)
-		-- BuddyFight setup: 10 Life = 10,000 LP (1000 LP = 1 Life)
-		Duel.SetLP(0,10000)
-		Duel.SetLP(1,10000)
+		-- BuddyFight setup: 10 Life (use LP directly!)
+		Duel.SetLP(0,10)
+		Duel.SetLP(1,10)
 		
 		-- Draw to 6 cards total (since we start with 5, draw 1 more)
 		Duel.Draw(0,1,REASON_RULE)
@@ -722,6 +735,115 @@ if not BuddyfightDuel then
 		
 		Buddyfight[tp].item_equipped = item
 		return true
+	end
+
+	-- ===== NEW BUILT-IN SYSTEM FUNCTIONS =====
+
+	-- Gauge System using Spell Counters
+	function BuddyfightDuel.SetupGaugeSystem(tp)
+		-- Create a gauge counter token for this player
+		local token=Duel.CreateToken(tp,202500025)
+		Duel.SendtoExtraP(token,tp,REASON_RULE)
+		token:AddCounter(COUNTER_GAUGE,2) -- Start with 2 gauge
+		Buddyfight[tp].gauge_token = token
+		Debug.Message("Player "..tp.." gauge system initialized with 2 gauge")
+	end
+
+	function BuddyfightDuel.GetGauge(tp)
+		-- Get current gauge using spell counters
+		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
+			return Buddyfight[tp].gauge_token:GetCounter(COUNTER_GAUGE)
+		end
+		return 0
+	end
+
+	function BuddyfightDuel.PayGaugeNew(tp, cost)
+		-- Pay gauge using spell counters
+		if BuddyfightDuel.GetGauge(tp) >= cost then
+			Buddyfight[tp].gauge_token:RemoveCounter(tp,COUNTER_GAUGE,cost)
+			Debug.Message("Player "..tp.." paid "..cost.." gauge")
+			return true
+		end
+		Debug.Message("Player "..tp.." insufficient gauge")
+		return false
+	end
+
+	function BuddyfightDuel.AddGauge(tp, amount)
+		-- Add gauge using spell counters
+		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
+			Buddyfight[tp].gauge_token:AddCounter(COUNTER_GAUGE,amount)
+			Debug.Message("Player "..tp.." gained "..amount.." gauge")
+		end
+	end
+
+	function BuddyfightDuel.CanCastSpellNew(tp, cost)
+		-- Check if player can cast spell (using new gauge system)
+		return BuddyfightDuel.GetGauge(tp) >= cost
+	end
+
+	-- Life System using Direct LP
+	function BuddyfightDuel.DealDamage(tp, damage)
+		-- Deal damage directly in Life points
+		Duel.Damage(tp, damage, REASON_EFFECT)
+		Debug.Message("Player "..tp.." takes "..damage.." Life damage")
+	end
+
+	function BuddyfightDuel.HealLife(tp, amount)
+		-- Heal life directly in LP
+		Duel.Recover(tp, amount, REASON_EFFECT)
+		Debug.Message("Player "..tp.." recovers "..amount.." Life")
+	end
+
+	function BuddyfightDuel.GetLife(tp)
+		-- Get current life (LP)
+		return Duel.GetLP(tp)
+	end
+
+	-- Impact System using Built-in Phase Restrictions
+	function BuddyfightDuel.CanCastImpactNew(tp, cost)
+		-- Impact can only be cast during End Phase
+		return Duel.GetCurrentPhase() == PHASE_END 
+			   and BuddyfightDuel.CanCastSpellNew(tp, cost)
+			   and not Buddyfight[tp].impact_used
+	end
+
+	function BuddyfightDuel.UseImpact(tp)
+		-- Mark impact as used this turn
+		Buddyfight[tp].impact_used = true
+	end
+
+	-- Equipment System using Built-in Equip Spells  
+	function BuddyfightDuel.EquipToMonster(equip_card, target_monster, tp)
+		-- Use built-in equip system
+		if Duel.Equip(tp, equip_card, target_monster) then
+			Debug.Message("Equipped "..equip_card:GetCode().." to monster")
+			return true
+		end
+		return false
+	end
+
+	-- Buddy Call using Built-in Special Summon
+	function BuddyfightDuel.BuddyCallNew(tp, buddy_monster)
+		-- Check conditions
+		if Buddyfight[tp].buddy_called then
+			Debug.Message("Buddy already called this duel")
+			return false
+		end
+		
+		if not BuddyfightDuel.CanCastSpellNew(tp, 2) then
+			Debug.Message("Insufficient gauge for Buddy Call")
+			return false
+		end
+		
+		-- Pay cost and summon
+		if BuddyfightDuel.PayGaugeNew(tp, 2) then
+			Buddyfight[tp].buddy_called = true
+			BuddyfightDuel.HealLife(tp, 1) -- Buddy Gift: +1 Life
+			Debug.Message("Buddy Call successful! +1 Life (Buddy Gift)")
+			return true
+		end
+		
+		return false
 	end
 
 end
