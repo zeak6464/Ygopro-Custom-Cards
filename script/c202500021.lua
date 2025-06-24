@@ -1,8 +1,7 @@
 -- Dragonblade, Dragobrave (5000/0/3)
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as BuddyFight Item (archetype 0x6000)
-    c:SetArchetype(0x6000)
+    -- Mark as BuddyFight Item (archetype set in database)
     
     -- Set item stats: 5000 power, 0 defense, 3 critical
     local e0=Effect.CreateEffect(c)

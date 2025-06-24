@@ -1,8 +1,7 @@
 -- Drum Bunker Dragon "2018" - Buddy Monster (Size 2)
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as Buddy Monster (archetype 0x1000)
-    c:SetArchetype(0x1000)
+    -- Mark as Buddy Monster (archetype set in database)
     
     -- Set monster size (Size 2 for buddy monsters)
     c.buddyfight_size = 2

@@ -1,8 +1,7 @@
 -- Reckless Angerrrr!! (Impact)
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as Impact Card (archetype 0x3000)
-    c:SetArchetype(0x3000)
+    -- Mark as Impact Card (archetype set in database)
     
     -- Impact can only be cast during Final Phase with gauge cost
     local e1=Effect.CreateEffect(c)

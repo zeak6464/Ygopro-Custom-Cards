@@ -1,9 +1,7 @@
 -- Dragon World (Flag)
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as Dragon World flag card (archetype 0x1001 for flags, plus 0x5000 for Dragon World)
-    c:SetArchetype(0x1001) -- Flag archetype
-    aux.AddSetcodesRule(c,true,0x5000) -- Also treated as Dragon World
+    -- Mark as Dragon World flag card (archetype set in database)
     
     -- Mark as Flag
     c.buddyfight_flag = true

@@ -1,8 +1,7 @@
 -- Dragonic Shoot
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as BuddyFight Spell (archetype 0x2000)  
-    c:SetArchetype(0x2000)
+    -- Mark as BuddyFight Spell (archetype set in database)
     
     -- Counter spell - destroy monster with 3000 or less power, no gauge cost
     local e1=Effect.CreateEffect(c)

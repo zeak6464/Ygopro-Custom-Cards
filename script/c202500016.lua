@@ -1,8 +1,7 @@
 -- Latale Shield Dragon (Size 1)
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as Dragon World monster
-    c:SetArchetype(0x5000)
+    -- Mark as Dragon World monster (archetype set in database)
     
     -- Set monster size (Size 1)
     c.buddyfight_size = 1

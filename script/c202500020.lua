@@ -1,8 +1,7 @@
 -- Green Dragon Shield
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as BuddyFight Spell (archetype 0x2000)  
-    c:SetArchetype(0x2000)
+    -- Mark as BuddyFight Spell (archetype set in database)
     
     -- Counter spell - can only be cast during opponent's attack when center is empty
     local e1=Effect.CreateEffect(c)

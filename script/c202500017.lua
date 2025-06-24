@@ -1,8 +1,7 @@
 -- Dragonic Heal
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Mark as BuddyFight Spell (archetype 0x2000)  
-    c:SetArchetype(0x2000)
+    -- Mark as BuddyFight Spell (archetype set in database)
     
     -- Simple healing spell with no gauge cost
     local e1=Effect.CreateEffect(c)
