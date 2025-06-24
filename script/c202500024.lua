@@ -146,10 +146,10 @@ end
 
 -- Buddy Call functions
 function s.buddycallcon(e,tp,eg,ep,ev,re,r,rp)
-    -- Can only Buddy Call if Buddy exists in Buddy Zone and not already called
+    -- Can only Buddy Call if Buddy exists in Buddy Zone (Spell Zone) and not already called
     return Buddyfight and Buddyfight[tp] and Buddyfight[tp].buddy_card 
            and not Buddyfight[tp].buddy_called
-           and Buddyfight[tp].buddy_card.is_buddy_zone
+           and Buddyfight[tp].buddy_card:IsLocation(LOCATION_SZONE)
 end
 
 function s.buddycallcost(e,tp,eg,ep,ev,re,r,rp,chk)

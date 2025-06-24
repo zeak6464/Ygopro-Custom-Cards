@@ -796,9 +796,6 @@ if not BuddyfightDuel then
 				-- Place in Spell Zone as face-up Spell Card (Buddy Zone)
 				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 				
-				-- Mark as Buddy Card in Buddy Zone
-				tc.is_buddy_zone = true
-				
 				-- Change type to Spell while in Buddy Zone
 				local e1=Effect.CreateEffect(tc)
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -807,6 +804,7 @@ if not BuddyfightDuel then
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 				tc:RegisterEffect(e1)
 				
+				-- Store buddy card reference (don't set custom properties on card)
 				Buddyfight[tp].buddy_card = tc
 				Debug.Message("Player "..tostring(tp).." selected "..tostring(tc:GetCode()).." as Buddy")
 			end
@@ -815,7 +813,6 @@ if not BuddyfightDuel then
 			local buddy_card = Duel.CreateToken(tp, 202500002)
 			if buddy_card then
 				Duel.MoveToField(buddy_card, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
-				buddy_card.is_buddy_zone = true
 				local e1=Effect.CreateEffect(buddy_card)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -962,11 +959,10 @@ if not BuddyfightDuel then
 			
 			-- Mark as called
 			Buddyfight[tp].buddy_called = true
-			buddy.is_buddy_zone = false
 			
 			-- Buddy Gift: +1 Life
 			BuddyfightDuel.HealLife(tp, 1)
-			Debug.Message("Buddy Call successful! Drum moved to Monster Zone, +1 Life (Buddy Gift)")
+			Debug.Message("Buddy Call successful! Buddy moved to Monster Zone, +1 Life (Buddy Gift)")
 			return true
 		end
 		
