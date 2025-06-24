@@ -1,4 +1,4 @@
--- Systemic Dagger Dragon (Size 1)
+-- Systemic Dagger Dragon (Size 1) - Using Built-in Systems
 local s,id=GetID()
 function s.initial_effect(c)
     -- Mark as Dragon World monster (archetype set in database)
@@ -12,48 +12,46 @@ function s.initial_effect(c)
     e0:SetOperation(s.callop)
     c:RegisterEffect(e0)
 
-    -- Move (can change battle position once per turn)
+    -- When summoned, can destroy 1 spell/trap
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
-    e1:SetCategory(CATEGORY_POSITION)
-    e1:SetType(EFFECT_TYPE_IGNITION)
-    e1:SetRange(LOCATION_MZONE)
-    e1:SetCountLimit(1)
-    e1:SetTarget(s.postg)
-    e1:SetOperation(s.posop)
+    e1:SetCategory(CATEGORY_DESTROY)
+    e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e1:SetCode(EVENT_SUMMON_SUCCESS)
+    e1:SetTarget(s.destg)
+    e1:SetOperation(s.desop)
     c:RegisterEffect(e1)
-
-    -- Quick attack (can attack the turn it's summoned)
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_SINGLE)
-    e2:SetCode(EFFECT_IGNORE_SUMMONING_CONDITION)
-    e2:SetCondition(s.atkcon)
+    
+    -- Same trigger for special summon
+    local e2=e1:Clone()
+    e2:SetCode(EVENT_SPSUMMON_SUCCESS)
     c:RegisterEffect(e2)
 end
 
 function s.callcost(e,c,tp)
-    return Duel.CheckLPCost(tp,0) and BuddyfightDuel.CanCastSpell(tp,1)
+    return Duel.CheckLPCost(tp,0) and BuddyfightDuel.CanCastSpellNew(tp,1)
 end
 
 function s.callop(e,tp,eg,ep,ev,re,r,rp)
-    BuddyfightDuel.PayGauge(tp,1)
-    Duel.Hint(HINT_MESSAGE,tp,"Paid 1 gauge to call Systemic Dagger Dragon (Size 1) - Move!")
+    BuddyfightDuel.PayGaugeNew(tp,1)
+    Duel.Hint(HINT_MESSAGE,tp,"Paid 1 gauge to call Systemic Dagger Dragon (Size 1)")
 end
 
-function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local c=e:GetHandler()
-    if chk==0 then return c:IsCanChangePosition() end
-    Duel.SetOperationInfo(0,CATEGORY_POSITION,c,1,0,0)
+function s.desfilter(c)
+    return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 
-function s.posop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    if c:IsRelateToEffect(e) then
-        Duel.ChangePosition(c,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_DEFENSE)
-        Duel.Hint(HINT_MESSAGE,tp,"Systemic Dagger Dragon uses Move!")
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil) end
+    local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+    local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+    if g:GetCount()>0 then
+        Duel.Destroy(g,REASON_EFFECT)
+        Duel.Hint(HINT_MESSAGE,tp,"Systemic Dagger Dragon destroys enemy spell/trap!")
     end
-end
-
-function s.atkcon(e)
-    return Duel.GetTurnPlayer()==e:GetHandlerPlayer()
 end 

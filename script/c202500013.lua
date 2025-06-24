@@ -1,11 +1,14 @@
--- Thousand Rapier Dragon (Size 1)
+-- Thousand Rapier Dragon (Size 1) - Using Built-in Systems
 local s,id=GetID()
 function s.initial_effect(c)
     -- Mark as Dragon World monster (archetype set in database)
     -- Size 1 monster (Level 4 = Size 1 in BuddyFight)
     
-    -- Set BuddyFight Penetrate ability
-    c.has_penetrate = true
+    -- Penetrate ability (built-in)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_PIERCE)
+    c:RegisterEffect(e1)
 
     -- Call cost for normal summoning
     local e0=Effect.CreateEffect(c)
@@ -28,11 +31,11 @@ function s.initial_effect(c)
 end
 
 function s.callcost(e,c,tp)
-    return Duel.CheckLPCost(tp,0) and BuddyfightDuel.CanCastSpell(tp,1)
+    return Duel.CheckLPCost(tp,0) and BuddyfightDuel.CanCastSpellNew(tp,1)
 end
 
 function s.callop(e,tp,eg,ep,ev,re,r,rp)
-    BuddyfightDuel.PayGauge(tp,1)
+    BuddyfightDuel.PayGaugeNew(tp,1)
     Duel.Hint(HINT_MESSAGE,tp,"Paid 1 gauge to call Thousand Rapier Dragon (Size 1) - Penetrate!")
 end
 

@@ -743,24 +743,35 @@ if not BuddyfightDuel then
 	function BuddyfightDuel.SetupGaugeSystem(tp)
 		-- Create a gauge counter token for this player
 		local token=Duel.CreateToken(tp,202500025)
-		Duel.SendtoExtraP(token,tp,REASON_RULE)
-		token:AddCounter(COUNTER_GAUGE,2) -- Start with 2 gauge
-		Buddyfight[tp].gauge_token = token
-		Debug.Message("Player "..tp.." gauge system initialized with 2 gauge")
+		if Duel.SendtoExtraP(token,tp,REASON_RULE)~=0 then
+			token:AddCounter(COUNTER_GAUGE,2) -- Start with 2 gauge
+			Buddyfight[tp].gauge_token = token
+			Debug.Message("Player "..tp.." gauge system initialized with 2 gauge")
+		else
+			-- Fallback: use old gauge system
+			Buddyfight[tp].gauge = 2
+			Debug.Message("Player "..tp.." using fallback gauge system")
+		end
 	end
 
 	function BuddyfightDuel.GetGauge(tp)
-		-- Get current gauge using spell counters
+		-- Get current gauge using spell counters or fallback
 		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
 			return Buddyfight[tp].gauge_token:GetCounter(COUNTER_GAUGE)
+		elseif Buddyfight[tp] and Buddyfight[tp].gauge then
+			return Buddyfight[tp].gauge
 		end
 		return 0
 	end
 
 	function BuddyfightDuel.PayGaugeNew(tp, cost)
-		-- Pay gauge using spell counters
+		-- Pay gauge using spell counters or fallback
 		if BuddyfightDuel.GetGauge(tp) >= cost then
-			Buddyfight[tp].gauge_token:RemoveCounter(tp,COUNTER_GAUGE,cost)
+			if Buddyfight[tp].gauge_token then
+				Buddyfight[tp].gauge_token:RemoveCounter(tp,COUNTER_GAUGE,cost)
+			elseif Buddyfight[tp].gauge then
+				Buddyfight[tp].gauge = Buddyfight[tp].gauge - cost
+			end
 			Debug.Message("Player "..tp.." paid "..cost.." gauge")
 			return true
 		end
@@ -769,10 +780,13 @@ if not BuddyfightDuel then
 	end
 
 	function BuddyfightDuel.AddGauge(tp, amount)
-		-- Add gauge using spell counters
+		-- Add gauge using spell counters or fallback
 		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
 			Buddyfight[tp].gauge_token:AddCounter(COUNTER_GAUGE,amount)
 			Debug.Message("Player "..tp.." gained "..amount.." gauge")
+		elseif Buddyfight[tp] and Buddyfight[tp].gauge then
+			Buddyfight[tp].gauge = Buddyfight[tp].gauge + amount
+			Debug.Message("Player "..tp.." gained "..amount.." gauge (fallback)")
 		end
 	end
 

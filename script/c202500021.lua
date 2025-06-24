@@ -91,4 +91,3 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
     BuddyfightDuel.DealDamage(p,d)
     Duel.Hint(HINT_MESSAGE,tp,"Dragonblade, Dragobrave deals counterattack damage!")
 end 
-end 
