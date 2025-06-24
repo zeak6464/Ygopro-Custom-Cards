@@ -15,16 +15,7 @@ BUDDYFIGHT_CARDS = [
         'setcode': 0x1000,  # BuddyFight system
         'ot': 4, 'alias': 0, 'category': 0
     },
-    {
-        'id': 202500025,
-        'name': 'BuddyFight Gauge Counter',
-        'desc': 'Token used to track gauge in BuddyFight duels. Counters on this card represent available gauge.',
-        'type': 0x4000000,  # Token
-        'atk': 0, 'def': 0, 'level': 1,
-        'race': 0, 'attribute': 0,
-        'setcode': 0x1000,  # BuddyFight system
-        'ot': 4, 'alias': 0, 'category': 0
-    },
+
     {
         'id': 202500001,
         'name': 'BuddyFight Field Generator',
@@ -42,7 +33,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Drum Bunker Dragon "2018"',
         'desc': 'A Size 2 Buddy Monster from Future Card BuddyFight. Has Soulguard and can be Buddy Called for 2 gauge. When in center, opponent cannot attack directly.',
         'type': 0x21,  # Effect Monster
-        'atk': 5000, 'def': 3000, 'level': 6,
+        'atk': 5000, 'def': 3000, 'level': 2,  # Level 2 = Size 2
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x1000,  # Buddy Monster
@@ -55,7 +46,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Gigant Sword Dragon',
         'desc': 'A Size 2 Dragon World monster. When summoned, you can destroy 1 opponent monster. Requires 2 gauge to call.',
         'type': 0x21,  # Effect Monster
-        'atk': 6000, 'def': 2000, 'level': 6,
+        'atk': 6000, 'def': 2000, 'level': 2,  # Level 2 = Size 2
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x5000,  # Dragon World
@@ -66,7 +57,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Extreme Sword Dragon',
         'desc': 'A Size 2 Dragon World monster with Double Attack. Can attack twice per turn. Requires 2 gauge to call.',
         'type': 0x21,  # Effect Monster
-        'atk': 5000, 'def': 3000, 'level': 6,
+        'atk': 5000, 'def': 3000, 'level': 2,  # Level 2 = Size 2
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x5000,  # Dragon World
@@ -77,7 +68,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Steel Gauntlet Dragon',
         'desc': 'A Size 1 Dragon World monster with defensive abilities. When destroyed, can search for another Dragon World monster.',
         'type': 0x21,  # Effect Monster
-        'atk': 3000, 'def': 4000, 'level': 4,
+        'atk': 3000, 'def': 4000, 'level': 1,  # Level 1 = Size 1
         'race': 0x4,  # Dragon
         'attribute': 0x10,  # Earth
         'setcode': 0x5000,  # Dragon World
@@ -88,7 +79,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Thousand Rapier Dragon',
         'desc': 'A Size 1 Dragon World monster. When it destroys an opponent monster, inflict 1 damage to opponent.',
         'type': 0x21,  # Effect Monster
-        'atk': 4000, 'def': 2000, 'level': 4,
+        'atk': 4000, 'def': 2000, 'level': 1,  # Level 1 = Size 1
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x5000,  # Dragon World
@@ -99,7 +90,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Bear-Trap Fang Dragon',
         'desc': 'A Size 1 Dragon World monster. When opponent attacks, can change attack target to this card.',
         'type': 0x21,  # Effect Monster
-        'atk': 3000, 'def': 3000, 'level': 4,
+        'atk': 3000, 'def': 3000, 'level': 1,  # Level 1 = Size 1
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x5000,  # Dragon World
@@ -110,7 +101,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Systemic Dagger Dragon',
         'desc': 'A Size 1 Dragon World monster with Move and Quick Attack. Can change battle position and attack the turn it is summoned.',
         'type': 0x21,  # Effect Monster
-        'atk': 3000, 'def': 2000, 'level': 4,
+        'atk': 3000, 'def': 2000, 'level': 1,  # Level 1 = Size 1
         'race': 0x4,  # Dragon
         'attribute': 0x8,  # Fire
         'setcode': 0x5000,  # Dragon World
@@ -121,7 +112,7 @@ BUDDYFIGHT_CARDS = [
         'name': 'Latale Shield Dragon',
         'desc': 'A Size 1 Dragon World monster with defensive abilities. Reduces battle damage to 0 once per turn. When destroyed, can summon another Dragon World monster.',
         'type': 0x21,  # Effect Monster
-        'atk': 2000, 'def': 4000, 'level': 4,
+        'atk': 2000, 'def': 4000, 'level': 1,  # Level 1 = Size 1
         'race': 0x4,  # Dragon
         'attribute': 0x10,  # Earth
         'setcode': 0x5000,  # Dragon World

@@ -12,17 +12,7 @@ function s.initial_effect(c)
     e0:SetOperation(s.callop)
     c:RegisterEffect(e0)
 
-    -- Optional Buddy Call (Special Summon from hand with gauge cost)
-    local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,0))
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_SPSUMMON_PROC)
-    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e1:SetRange(LOCATION_HAND)
-    e1:SetCondition(s.buddycallcon)
-    e1:SetTarget(s.buddycalltg)
-    e1:SetOperation(s.buddycallop)
-    c:RegisterEffect(e1)
+    -- Buddy Call is handled by Dragon World Flag
 
     -- Soulguard (negate direct attack by destroying self)
     local e2=Effect.CreateEffect(c)
@@ -54,21 +44,7 @@ function s.callop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_MESSAGE,tp,"Paid 1 gauge to call Drum Bunker Dragon (Size 2)")
 end
 
-function s.buddycallcon(e,c)
-    if c==nil then return true end
-    local tp=c:GetControler()
-    return Buddyfight and Buddyfight[tp] and Buddyfight[tp].gauge>=2 and not Buddyfight[tp].buddy_called
-end
-
-function s.buddycalltg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
-end
-
-function s.buddycallop(e,tp,eg,ep,ev,re,r,rp,c)
-    if BuddyfightDuel.BuddyCall(tp, c) then
-        Duel.Hint(HINT_MESSAGE,tp,"Buddy Call: Drum Bunker Dragon (Size 2)! +1 Life (Buddy Gift)")
-    end
-end
+-- Buddy Call functions removed - handled by Dragon World Flag
 
 function s.centercon(e)
     local c=e:GetHandler()

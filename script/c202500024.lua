@@ -1,4 +1,4 @@
--- Dragon World Flag (Using Built-in Gauge System)
+-- Dragon World Flag (Field Spell with Gauge Tracking)
 local s,id=GetID()
 function s.initial_effect(c)
     -- Mark as BuddyFight Flag (archetype set in database)
@@ -7,7 +7,16 @@ function s.initial_effect(c)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetOperation(s.activate)
     c:RegisterEffect(e1)
+    
+    -- Gauge tracking display
+    local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e0:SetCode(EVENT_ADJUST)
+    e0:SetRange(LOCATION_FZONE)
+    e0:SetOperation(s.gaugecheck)
+    c:RegisterEffect(e0)
     
     -- ATK/DEF boost to Dragon World monsters
     local e2=Effect.CreateEffect(c)
@@ -55,15 +64,45 @@ function s.initial_effect(c)
     e6:SetTarget(s.srtg)
     e6:SetOperation(s.srop)
     c:RegisterEffect(e6)
+
+    -- [ACT] Buddy Call: Pay 2 gauge to call your Buddy from Buddy Zone
+    local e7=Effect.CreateEffect(c)
+    e7:SetDescription(aux.Stringid(id,2))
+    e7:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_RECOVER)
+    e7:SetType(EFFECT_TYPE_IGNITION)
+    e7:SetRange(LOCATION_FZONE)
+    e7:SetCountLimit(1,id)
+    e7:SetCondition(s.buddycallcon)
+    e7:SetCost(s.buddycallcost)
+    e7:SetTarget(s.buddycalltg)
+    e7:SetOperation(s.buddycallop)
+    c:RegisterEffect(e7)
 end
 
 function s.atkfilter(e,c)
     return c:IsSetCard(0x5000) -- Dragon World archetype
 end
 
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    -- Initialize gauge counters when activated
+    c:AddCounter(COUNTER_GAUGE, 2)
+    Duel.Hint(HINT_MESSAGE,tp,"Dragon World activated! 2 gauge ready")
+end
+
+function s.gaugecheck(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    local gauge = c:GetCounter(COUNTER_GAUGE)
+    -- Update field display with current gauge (visual feedback)
+    if gauge ~= (c.last_gauge or 0) then
+        c.last_gauge = gauge
+        -- Visual gauge update happens automatically via counters
+    end
+end
+
 function s.dircon(e)
-    -- Can direct attack if opponent has no Size 2+ monsters (Level 6+)
-    return not Duel.IsExistingMatchingCard(Card.IsLevelAbove,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil,6)
+    -- Can direct attack if opponent has no Size 2+ monsters (Level 2+)
+    return not Duel.IsExistingMatchingCard(Card.IsLevelAbove,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil,2)
 end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
@@ -108,4 +147,29 @@ function s.srop(e,tp,eg,ep,ev,re,r,rp)
         Duel.ShuffleDeck(tp)
         Duel.Hint(HINT_MESSAGE,tp,"Dragon World Flag: Searched Dragon World card!")
     end
+end
+
+-- Buddy Call functions
+function s.buddycallcon(e,tp,eg,ep,ev,re,r,rp)
+    -- Can only Buddy Call if Buddy exists in Buddy Zone and not already called
+    return Buddyfight and Buddyfight[tp] and Buddyfight[tp].buddy_card 
+           and not Buddyfight[tp].buddy_called
+           and Buddyfight[tp].buddy_card.is_buddy_zone
+end
+
+function s.buddycallcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return BuddyfightDuel.CanCastSpellNew(tp,2) end
+    BuddyfightDuel.PayGaugeNew(tp,2)
+    Duel.Hint(HINT_MESSAGE,tp,"Dragon World Flag: Paid 2 gauge for Buddy Call!")
+end
+
+function s.buddycalltg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,Buddyfight[tp].buddy_card,1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1)
+end
+
+function s.buddycallop(e,tp,eg,ep,ev,re,r,rp)
+    -- Use the main Buddy Call system
+    BuddyfightDuel.BuddyCallNew(tp)
 end 

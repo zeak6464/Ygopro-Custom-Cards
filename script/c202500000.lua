@@ -33,9 +33,9 @@ if not BuddyfightDuel then
 			   c:IsSetCard(0x3000) or c:IsSetCard(0x4000) -- Any BuddyFight card
 	end
 
-	-- Get monster size (uses YGO Level system - much simpler!)
+	-- Get monster size (uses YGO Level system - Level = Size directly!)
 	function Card.GetSize(c)
-		-- Level 1 = Size 1, Level 2 = Size 2, etc.
+		-- Level 1 = Size 1, Level 2 = Size 2, Level 3 = Size 3, etc.
 		-- Non-monsters default to Size 1
 		if c:IsType(TYPE_MONSTER) then
 			return c:GetLevel()
@@ -140,8 +140,14 @@ if not BuddyfightDuel then
 		Duel.Draw(0,1,REASON_RULE)
 		Duel.Draw(1,1,REASON_RULE)
 		
+		-- Auto-activate Dragon World Field Spell for both players
+		BuddyfightDuel.SetupFieldSpells()
+		
+		-- Place Buddy Monster as Spell Card in Spell Zone for both players
+		BuddyfightDuel.SetupBuddyCards()
+		
 		-- Use Debug.Message for string messages
-		Debug.Message("BuddyFight Setup Complete: 10 Life, 6 cards, 2 gauge")
+		Debug.Message("BuddyFight Setup Complete: 10 Life, 6 cards, 2 gauge, Buddy ready")
 	end
 
 	function BuddyfightDuel.RegisterCustomPhases()
@@ -513,11 +519,12 @@ if not BuddyfightDuel then
 	function BuddyfightDuel.statusdisplay(e,tp,eg,ep,ev,re,r,rp)
 		for p=0,1 do
 			if Buddyfight and Buddyfight[p] then
-				local buddy_status = Buddyfight[p].buddy_called and "Called" or "Not Called"
+				local gauge = BuddyfightDuel.GetGauge(p)
+				local buddy_status = Buddyfight[p].buddy_called and "Called (Monster Zone)" or "Ready (Buddy Zone)"
 				local item_status = Buddyfight[p].item_equipped and "Equipped" or "None"
 				local impact_status = Buddyfight[p].impact_used and "Used" or "Ready"
 				local counter_status = Buddyfight[p].counter_ready and "Ready" or "Not Ready"
-				Debug.Message("Gauge: "..Buddyfight[p].gauge.." | Size: "..Buddyfight[p].total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
+				Debug.Message("Player "..p.." | Gauge: "..gauge.." | Size: "..Buddyfight[p].total_size.."/3 | Buddy: "..buddy_status.." | Item: "..item_status.." | Impact: "..impact_status.." | Counter: "..counter_status)
 			end
 		end
 	end
@@ -739,54 +746,129 @@ if not BuddyfightDuel then
 
 	-- ===== NEW BUILT-IN SYSTEM FUNCTIONS =====
 
-	-- Gauge System using Spell Counters
-	function BuddyfightDuel.SetupGaugeSystem(tp)
-		-- Create a gauge counter token for this player
-		local token=Duel.CreateToken(tp,202500025)
-		if Duel.SendtoExtraP(token,tp,REASON_RULE)~=0 then
-			token:AddCounter(COUNTER_GAUGE,2) -- Start with 2 gauge
-			Buddyfight[tp].gauge_token = token
-			Debug.Message("Player "..tp.." gauge system initialized with 2 gauge")
-		else
-			-- Fallback: use old gauge system
-			Buddyfight[tp].gauge = 2
-			Debug.Message("Player "..tp.." using fallback gauge system")
+	-- Field Spell Setup
+	function BuddyfightDuel.SetupFieldSpells()
+		-- Create and activate Dragon World Field Spell for both players
+		for tp=0,1 do
+			local field_card = Duel.CreateToken(tp, 202500024)
+			if field_card then
+				Duel.MoveToField(field_card, tp, tp, LOCATION_FZONE, POS_FACEUP, true)
+				field_card:AddCounter(COUNTER_GAUGE, 2) -- Start with 2 gauge
+				Buddyfight[tp].field_spell = field_card
+				Debug.Message("Player "..tp.." Dragon World Field activated with 2 gauge")
+			end
 		end
 	end
 
+	-- Buddy Card Setup
+	function BuddyfightDuel.SetupBuddyCards()
+		-- Let each player choose their Buddy from deck
+		for tp=0,1 do
+			BuddyfightDuel.SelectBuddyFromDeck(tp)
+		end
+	end
+
+	-- Select Buddy from Deck
+	function BuddyfightDuel.SelectBuddyFromDeck(tp)
+		-- Search deck for Buddy monsters (Dragon World monsters with "Buddy" in name or specific Buddy monsters)
+		local g=Duel.GetMatchingGroup(BuddyfightDuel.BuddyFilter,tp,LOCATION_DECK,0,nil)
+		if #g>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(202500000,0)) -- "Select your Buddy"
+			local tc=g:Select(tp,1,1,nil):GetFirst()
+			if tc then
+				-- Remove from deck
+				Duel.SendtoRemoved(tc,POS_FACEDOWN,REASON_RULE)
+				
+				-- Place in Spell Zone as face-up Spell Card (Buddy Zone)
+				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+				
+				-- Mark as Buddy Card in Buddy Zone
+				tc.is_buddy_zone = true
+				
+				-- Change type to Spell while in Buddy Zone
+				local e1=Effect.CreateEffect(tc)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CHANGE_TYPE)
+				e1:SetValue(TYPE_SPELL)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+				tc:RegisterEffect(e1)
+				
+				Buddyfight[tp].buddy_card = tc
+				Debug.Message("Player "..tp.." selected "..tc:GetCode().." as Buddy")
+			end
+		else
+			-- Fallback: Create default Drum Bunker Dragon
+			local buddy_card = Duel.CreateToken(tp, 202500002)
+			if buddy_card then
+				Duel.MoveToField(buddy_card, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
+				buddy_card.is_buddy_zone = true
+				local e1=Effect.CreateEffect(buddy_card)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CHANGE_TYPE)
+				e1:SetValue(TYPE_SPELL)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+				buddy_card:RegisterEffect(e1)
+				Buddyfight[tp].buddy_card = buddy_card
+				Debug.Message("Player "..tp.." no Buddy found in deck, using default Drum Bunker Dragon")
+			end
+		end
+	end
+
+	-- Filter for Buddy monsters
+	function BuddyfightDuel.BuddyFilter(c)
+		-- Check if it's a Dragon World monster that can be a Buddy
+		local code = c:GetCode()
+		-- Drum Bunker Dragon and other designated Buddy monsters
+		return code == 202500002 or code == 202500010 or code == 202500011 or code == 202500012
+			or (c:IsSetCard(0x5000) and c:IsType(TYPE_MONSTER) and c:GetLevel() >= 4)
+	end
+
+	-- Gauge System using Field Spell Counters
+	function BuddyfightDuel.SetupGaugeSystem(tp)
+		-- Gauge is now tracked on the Field Spell
+		Debug.Message("Player "..tp.." gauge system ready (Field Spell)")
+	end
+
 	function BuddyfightDuel.GetGauge(tp)
-		-- Get current gauge using spell counters or fallback
-		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
-			return Buddyfight[tp].gauge_token:GetCounter(COUNTER_GAUGE)
-		elseif Buddyfight[tp] and Buddyfight[tp].gauge then
+		-- Get current gauge from Field Spell
+		if Buddyfight[tp] and Buddyfight[tp].field_spell then
+			return Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
+		end
+		-- Fallback to variable if Field Spell not available
+		if Buddyfight[tp] and Buddyfight[tp].gauge then
 			return Buddyfight[tp].gauge
 		end
 		return 0
 	end
 
 	function BuddyfightDuel.PayGaugeNew(tp, cost)
-		-- Pay gauge using spell counters or fallback
+		-- Pay gauge from Field Spell
 		if BuddyfightDuel.GetGauge(tp) >= cost then
-			if Buddyfight[tp].gauge_token then
-				Buddyfight[tp].gauge_token:RemoveCounter(tp,COUNTER_GAUGE,cost)
+			if Buddyfight[tp].field_spell then
+				Buddyfight[tp].field_spell:RemoveCounter(tp, COUNTER_GAUGE, cost)
+				local remaining = Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
+				Debug.Message("Player "..tp.." paid "..cost.." gauge (remaining: "..remaining..")")
 			elseif Buddyfight[tp].gauge then
+				-- Fallback
 				Buddyfight[tp].gauge = Buddyfight[tp].gauge - cost
+				Debug.Message("Player "..tp.." paid "..cost.." gauge (fallback: "..Buddyfight[tp].gauge..")")
 			end
-			Debug.Message("Player "..tp.." paid "..cost.." gauge")
 			return true
 		end
-		Debug.Message("Player "..tp.." insufficient gauge")
+		Debug.Message("Player "..tp.." insufficient gauge (has: "..BuddyfightDuel.GetGauge(tp)..", needs: "..cost..")")
 		return false
 	end
 
 	function BuddyfightDuel.AddGauge(tp, amount)
-		-- Add gauge using spell counters or fallback
-		if Buddyfight[tp] and Buddyfight[tp].gauge_token then
-			Buddyfight[tp].gauge_token:AddCounter(COUNTER_GAUGE,amount)
-			Debug.Message("Player "..tp.." gained "..amount.." gauge")
+		-- Add gauge to Field Spell
+		if Buddyfight[tp] and Buddyfight[tp].field_spell then
+			Buddyfight[tp].field_spell:AddCounter(COUNTER_GAUGE, amount)
+			local total = Buddyfight[tp].field_spell:GetCounter(COUNTER_GAUGE)
+			Debug.Message("Player "..tp.." gained "..amount.." gauge (total: "..total..")")
 		elseif Buddyfight[tp] and Buddyfight[tp].gauge then
+			-- Fallback
 			Buddyfight[tp].gauge = Buddyfight[tp].gauge + amount
-			Debug.Message("Player "..tp.." gained "..amount.." gauge (fallback)")
+			Debug.Message("Player "..tp.." gained "..amount.." gauge (fallback: "..Buddyfight[tp].gauge..")")
 		end
 	end
 
@@ -837,10 +919,15 @@ if not BuddyfightDuel then
 	end
 
 	-- Buddy Call using Built-in Special Summon
-	function BuddyfightDuel.BuddyCallNew(tp, buddy_monster)
+	function BuddyfightDuel.BuddyCallNew(tp)
 		-- Check conditions
 		if Buddyfight[tp].buddy_called then
 			Debug.Message("Buddy already called this duel")
+			return false
+		end
+		
+		if not Buddyfight[tp].buddy_card then
+			Debug.Message("No Buddy card available")
 			return false
 		end
 		
@@ -849,11 +936,23 @@ if not BuddyfightDuel then
 			return false
 		end
 		
-		-- Pay cost and summon
+		-- Pay cost and move Buddy from Spell Zone to Monster Zone
 		if BuddyfightDuel.PayGaugeNew(tp, 2) then
+			local buddy = Buddyfight[tp].buddy_card
+			
+			-- Remove Spell type effect
+			buddy:ResetEffect()
+			
+			-- Move to Monster Zone
+			Duel.MoveToField(buddy, tp, tp, LOCATION_MZONE, POS_FACEUP_ATTACK, true)
+			
+			-- Mark as called
 			Buddyfight[tp].buddy_called = true
-			BuddyfightDuel.HealLife(tp, 1) -- Buddy Gift: +1 Life
-			Debug.Message("Buddy Call successful! +1 Life (Buddy Gift)")
+			buddy.is_buddy_zone = false
+			
+			-- Buddy Gift: +1 Life
+			BuddyfightDuel.HealLife(tp, 1)
+			Debug.Message("Buddy Call successful! Drum moved to Monster Zone, +1 Life (Buddy Gift)")
 			return true
 		end
 		

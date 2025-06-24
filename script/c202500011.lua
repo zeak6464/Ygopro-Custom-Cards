@@ -26,6 +26,8 @@ function s.initial_effect(c)
     e2:SetCondition(s.atkcon)
     e2:SetValue(500)
     c:RegisterEffect(e2)
+
+    -- Buddy Call is handled by Dragon World Flag
 end
 
 function s.callcost(e,c,tp)
